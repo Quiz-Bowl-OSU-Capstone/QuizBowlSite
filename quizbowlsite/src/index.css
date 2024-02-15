@@ -1,0 +1,42 @@
+@import url("https://fonts.googleapis.com/css2?family=Exo&display=swap");
+
+body {
+  margin: 0;
+  background-color: rgb(227, 220, 218);
+  font-family: "Exo", sans-serif;
+}
+
+a.active {
+  background-color: rgb(214, 177, 43);
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: rgb(214, 134, 43);
+  padding: 10px;
+  height: 50px;
+}
+
+.navbar a {
+  flex: 1;
+  font-size: 30px;
+  text-align: center;
+  text-decoration: none;
+  color: black;
+}
+
+.navbar a:hover {
+  background-color: rgb(213, 167, 150); /* Change background color on hover */
+}
+
+.dialog {
+  text-align: center;
+  border: 2px solid black;
+  border-radius: 5px;
+  padding: 10px;
+  border-radius: 3px;
+  margin: 15px;
+  max-width: 400px; /* Adjust the width as needed */
+}
