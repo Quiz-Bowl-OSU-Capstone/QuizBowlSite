@@ -40,3 +40,28 @@ a.active {
   margin: 15px;
   max-width: 400px; /* Adjust the width as needed */
 }
+
+.sidebar {
+  width: 200px;
+  background-color: rgb(237, 172, 43);
+  padding: 10px;
+  height: calc(97vh - 50px);
+  overflow-y: auto;
+}
+
+.sidebar ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.sidebar a {
+  display: block;
+  text-decoration: none;
+  color: black;
+  font-size: 18px;
+  padding: 5px 10px;
+}
+
+.sidebar a:hover {
+  background-color: #ccc;
+}

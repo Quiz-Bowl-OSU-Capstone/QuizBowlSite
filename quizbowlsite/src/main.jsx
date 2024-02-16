@@ -1,10 +1,15 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-
-import App, { About, Contact, ErrorPage, Help, Home, Login } from "./App";
+import { QuizBowl } from "./pages/QuizBowl";
+import { About } from "./pages/About";
+import { Contact } from "./pages/Contact";
+import { Help } from "./pages/Help";
+import { Login } from "./pages/Login";
+import App from "./Home";
 
 import "./index.css";
+import { ErrorPage } from "./Home";
 
 const router = createBrowserRouter([
   {
@@ -16,7 +21,7 @@ const router = createBrowserRouter([
       </App>
     ),
     children: [
-      { index: true, element: <Home /> },
+      { index: true, element: <QuizBowl /> },
       { path: "about", element: <About /> },
       { path: "login", element: <Login /> },
       { path: "contact", element: <Contact /> },
