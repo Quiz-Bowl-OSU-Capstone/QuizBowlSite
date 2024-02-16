@@ -65,3 +65,14 @@ a.active {
 .sidebar a:hover {
   background-color: #ccc;
 }
+
+.filter-box {
+  border: 1px solid #e11919;
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(210, 11, 11, 0.1);
+}
+
+.filter-box h3 {
+  margin-top: 0;
+}
