@@ -100,14 +100,18 @@ export function QuizBowl() {
     async function fetchRandomQuestions() {
       try {
         const response = await fetch(
-          "https://qzblapi.azurewebsites.net/api/PickRandomQuestions"
+          "https://qzblapi.azurewebsites.net/api/PickRandomQuestions?uid=1"
         );
         if (!response.ok) {
           throw new Error("Failed to fetch random questions");
         }
         const data = await response.json();
         console.log("Random Questions:", data.questions);
-        setRandomQuestions(data.questions);
+        if (Array.isArray(data.questions)) {
+          setRandomQuestions(data.questions);
+        } else {
+          console.error("Fetched data is not an array:", data.questions);
+        }
       } catch (error) {
         console.error("Error fetching random questions:", error);
       }
