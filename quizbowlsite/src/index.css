@@ -45,7 +45,7 @@ a.active {
   width: 250px;
   background-color: rgb(237, 172, 43);
   padding: 10px;
-  height: calc(97vh - 50px);
+  height: fill-available;
   overflow: auto;
 }
 
@@ -84,6 +84,8 @@ a.active {
 
 .question-holder {
   padding-left: 20px;
+  padding-right: 10px;
+  max-width: 80%;
 }
 
 .question-individual {

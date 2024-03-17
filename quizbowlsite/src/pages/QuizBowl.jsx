@@ -161,11 +161,13 @@ export function QuizBowl() {
         <ol>
           {randomQuestions.map((question, index) => (
             <li key={index} className="question-individual">
-              <strong>{question.Question}</strong>
-              <br />
-              Answer: {question.Answer}
-              <br />
-              <i>Level: {question.Level} &nbsp; | &nbsp; Species: {question.Species} &nbsp; | &nbsp; Topic: {question.Topic} &nbsp; | &nbsp; Resource: {question.Resource} &nbsp; | &nbsp; ID: {question.id}</i>
+              <p>
+                <strong>{question.Question}</strong>
+                <br />
+                Answer: {question.Answer}
+                <br />
+                <i>Level: {question.Level} &nbsp; | &nbsp; Species: {question.Species} &nbsp; | &nbsp; Topic: {question.Topic} &nbsp; | &nbsp; Resource: {question.Resource} &nbsp; | &nbsp; ID: {question.id}</i>
+              </p>
             </li>
           ))}
         </ol>
