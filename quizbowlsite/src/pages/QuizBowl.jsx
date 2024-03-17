@@ -34,6 +34,7 @@ export function QuizBowl() {
 
   async function fetchRandomQuestions(params) {
     try {
+      document.getElementById("gen-questions").setAttribute("disabled", "true");
       const response = await fetch(
         "https://qzblapi.azurewebsites.net/api/PickRandomQuestions?uid=1" + params
       );
@@ -57,6 +58,7 @@ export function QuizBowl() {
           }
         }
         setRandomQuestions(data.questions);
+        document.getElementById("gen-questions").removeAttribute("disabled");
       } else {
         console.error("Fetched data is not an array:", data.questions);
       }
@@ -68,6 +70,7 @@ export function QuizBowl() {
   useEffect(() => {
     async function fetchFilters() {
       try {
+        document.getElementById("gen-questions").setAttribute("disabled", "true");
         const response = await fetch(
           "https://qzblapi.azurewebsites.net/api/SearchFilters?uid=1"
         );
@@ -87,6 +90,8 @@ export function QuizBowl() {
           level: levelOptions,
           topic: topicOptions,
         });
+
+        document.getElementById("gen-questions").removeAttribute("disabled");
       } catch (error) {
         console.error("Error fetching filters:", error);
       }
@@ -152,7 +157,7 @@ export function QuizBowl() {
               </li>
             </ul>
           </form>
-          <button onClick={handleClick}>
+          <button id="gen-questions" onClick={handleClick}>
             Generate Questions
           </button>
         </div>
