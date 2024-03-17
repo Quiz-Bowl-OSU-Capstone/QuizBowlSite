@@ -42,11 +42,11 @@ a.active {
 }
 
 .sidebar {
-  width: 200px;
+  width: 250px;
   background-color: rgb(237, 172, 43);
   padding: 10px;
   height: calc(97vh - 50px);
-  overflow-y: auto;
+  overflow-x: scroll;
 }
 
 .sidebar ul {
@@ -67,7 +67,7 @@ a.active {
 }
 
 .filter-box {
-  border: 1px solid #e11919;
+  border: 2px solid black;
   padding: 10px;
   border-radius: 5px;
   box-shadow: 0 2px 4px rgba(210, 11, 11, 0.1);
@@ -75,4 +75,22 @@ a.active {
 
 .filter-box h3 {
   margin-top: 0;
+}
+
+.content-holder {
+  display: flex;
+  justify-content: left;
+}
+
+.question-holder {
+  padding-left: 20px;
+}
+
+.question-individual {
+  padding-bottom: 16px;
+  line-height: 1.5;
+}
+
+.select-box {
+  width: 150px;
 }
