@@ -2,10 +2,10 @@ import React, { useState, useEffect } from "react";
 
 export function QuizBowl() {
   const [filters, setFilters] = useState({
-    species: [],
-    resource: [],
-    level: [],
-    topic: [],
+    species: ["Loading..."],
+    resource: ["Loading..."],
+    level: ["Loading..."],
+    topic: ["Loading..."],
   });
 
   const [randomQuestions, setRandomQuestions] = useState([]);
