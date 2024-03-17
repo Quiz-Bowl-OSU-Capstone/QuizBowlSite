@@ -42,7 +42,7 @@ a.active {
 }
 
 .sidebar {
-  width: 200px;
+  width: 250px;
   background-color: rgb(237, 172, 43);
   padding: 10px;
   height: calc(97vh - 50px);
@@ -75,4 +75,18 @@ a.active {
 
 .filter-box h3 {
   margin-top: 0;
+}
+
+.content-holder {
+  display: flex;
+  justify-content: left;
+}
+
+.question-holder {
+  padding-left: 20px;
+}
+
+.question-individual {
+  padding-bottom: 16px;
+  line-height: 1.5;
 }
