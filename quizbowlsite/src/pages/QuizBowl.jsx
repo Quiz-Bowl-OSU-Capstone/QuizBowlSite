@@ -19,14 +19,12 @@ export function QuizBowl() {
         if (!response.ok) {
           throw new Error("Failed to fetch filters");
         }
-        console.log("Filters:", response.json());
         const data = await response.json();
-        console.log("Filters:", data);
 
-        const speciesOptions = data.Species.filter(Boolean);
-        const resourceOptions = data.Resource.filter(Boolean);
-        const levelOptions = data.Level.filter(Boolean);
-        const topicOptions = data.Topic.filter(Boolean);
+        var speciesOptions = data.Species.filter(Boolean);
+        var resourceOptions = data.Resource.filter(Boolean);
+        var levelOptions = data.Level.filter(Boolean);
+        var topicOptions = data.Topic.filter(Boolean);
 
         setFilters({
           species: speciesOptions,
@@ -49,6 +47,20 @@ export function QuizBowl() {
         }
         const data = await response.json();
         if (Array.isArray(data.questions)) {
+          for (var i = 0; i < data.questions.length; i++) {
+            if (data.questions[i].Topic == null) {
+              data.questions[i].Topic = "N/A";
+            }
+            if (data.questions[i].Resource == null) {
+              data.questions[i].Resource = "N/A";
+            }
+            if (data.questions[i].Species == null) {
+              data.questions[i].Species = "N/A";
+            }
+            if (data.questions[i].Level == null) {
+              data.questions[i].Level = "N/A";
+            }
+          }
           setRandomQuestions(data.questions);
         } else {
           console.error("Fetched data is not an array:", data.questions);
@@ -59,7 +71,7 @@ export function QuizBowl() {
     }
 
     fetchRandomQuestions();
-    //fetchFilters();
+    fetchFilters();
   }, []);
 
   return (
@@ -70,8 +82,8 @@ export function QuizBowl() {
           <form>
             <ul>
               <li>
-                <label htmlFor="level">Level:</label>
-                <select id="level">
+                <label htmlFor="level">Level<br /></label>
+                <select id="level" className="select-box">
                   {filters.level.map((level, index) => (
                     <option key={index} value={level}>
                       {level}
@@ -80,8 +92,8 @@ export function QuizBowl() {
                 </select>
               </li>
               <li>
-                <label htmlFor="species">Species:</label>
-                <select id="species">
+                <label htmlFor="species">Species<br /></label>
+                <select id="species" className="select-box">
                   {filters.species.map((species, index) => (
                     <option key={index} value={species}>
                       {species}
@@ -90,8 +102,8 @@ export function QuizBowl() {
                 </select>
               </li>
               <li>
-                <label htmlFor="resource">Resource:</label>
-                <select id="resource">
+                <label htmlFor="resource">Resource<br /></label>
+                <select id="resource" className="select-box">
                   {filters.resource.map((resource, index) => (
                     <option key={index} value={resource}>
                       {resource}
@@ -100,8 +112,8 @@ export function QuizBowl() {
                 </select>
               </li>
               <li>
-                <label htmlFor="topic">Topic:</label>
-                <select id="topic">
+                <label htmlFor="topic">Topic<br /></label>
+                <select id="topic" className="select-box">
                   {filters.topic.map((topic, index) => (
                     <option key={index} value={topic}>
                       {topic}
@@ -122,7 +134,7 @@ export function QuizBowl() {
               <br />
               Answer: {question.Answer}
               <br />
-              <i>Species: {question.Species} | Resource: {question.Resource} | Level: {question.Level} | Topic: {question.Topic}</i>
+              <i>Level: {question.Level} &nbsp; | &nbsp; Species: {question.Species} &nbsp; | &nbsp; Topic: {question.Topic} &nbsp; | &nbsp; Resource: {question.Resource}</i>
             </li>
           ))}
         </ol>

@@ -4,7 +4,7 @@ export default function App() {
   return (
     <>
       <nav className="navbar">
-        <NavLink to="/">Quizbowl</NavLink>
+        <NavLink to="/">Quiz Bowl</NavLink>
         <NavLink to="/login">Login</NavLink>
         <NavLink to="/about">About</NavLink>
         <NavLink to="/contact">Contact</NavLink>
