@@ -6,6 +6,17 @@ body {
   font-family: "Exo", sans-serif;
 }
 
+/* Hide scrollbar for Chrome, Safari and Opera */
+.example::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.example {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
 a.active {
   background-color: rgb(214, 177, 43);
 }
@@ -46,6 +57,7 @@ a.active {
   background-color: rgb(237, 172, 43);
   padding: 10px;
   height: fill-available;
+  min-height: calc(100vh - 80px);
   overflow: auto;
 }
 

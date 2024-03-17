@@ -66,7 +66,6 @@ export function QuizBowl() {
   }
 
   useEffect(() => {
-
     async function fetchFilters() {
       try {
         const response = await fetch(
@@ -100,9 +99,11 @@ export function QuizBowl() {
     <div className="content-holder">
       <aside className="sidebar">
         <div className="filter-box">
-          <h3 style={{ textAlign: "center" }}>Filter</h3>
+        <h3 style={{ textAlign: "center" }}>Important Information</h3>
+          <p>If this is the first time in a while that you are using this website, it may take a long time to load initially. This is normal and it should be faster afterwards</p>
+          <p>You need to log into the website in order to load questions on this page. If you are not logged in, please do so now.</p>
+          <h3 style={{ textAlign: "center" }}>Filters</h3>
           <p>Select checkboxes to enable/disable filters. Use drop down menus to adjust filter settings.</p>
-          <p><i>If this is the first time in a while that you are using this website, it may take a long time to load initially. This is normal and it should be faster afterwards.</i></p>
           <form>
             <ul>
               <li>
