@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import "../components/questioncard.css";
 
 export function QuizBowl() {
   const [filters, setFilters] = useState({
@@ -9,6 +10,7 @@ export function QuizBowl() {
   });
 
   const [randomQuestions, setRandomQuestions] = useState([]);
+  const [selectedQuestion, setSelectedQuestion] = useState(null);
 
   async function handleClick() {
     var params = "";
@@ -32,11 +34,32 @@ export function QuizBowl() {
     fetchRandomQuestions(params);
   }
 
+  function handleQuestionClick(question) {
+    setSelectedQuestion((prevQuestion) => {
+      if (prevQuestion && prevQuestion.id === question.id) {
+        return null;
+      } else {
+        return question;
+      }
+    });
+  }
+
+  // Function to handle edit button click
+  function handleEditClick() {
+    // Edit
+  }
+
+  // Function to handle delete button click
+  function handleDeleteClick() {
+    // Add
+  }
+
   async function fetchRandomQuestions(params) {
     try {
       document.getElementById("gen-questions").setAttribute("disabled", "true");
       const response = await fetch(
-        "https://qzblapi.azurewebsites.net/api/PickRandomQuestions?uid=1" + params
+        "https://qzblapi.azurewebsites.net/api/PickRandomQuestions?uid=1" +
+          params
       );
       if (!response.ok) {
         throw new Error("Failed to fetch random questions");
@@ -70,7 +93,9 @@ export function QuizBowl() {
   useEffect(() => {
     async function fetchFilters() {
       try {
-        document.getElementById("gen-questions").setAttribute("disabled", "true");
+        document
+          .getElementById("gen-questions")
+          .setAttribute("disabled", "true");
         const response = await fetch(
           "https://qzblapi.azurewebsites.net/api/SearchFilters?uid=1"
         );
@@ -104,16 +129,34 @@ export function QuizBowl() {
     <div className="content-holder">
       <aside className="sidebar">
         <div className="filter-box">
-        <h3 style={{ textAlign: "center" }}>Important Information</h3>
-          <p>If this is the first time in a while that you are using this website, it may take a long time to load initially. This is normal and it should be faster afterwards</p>
-          <p>You need to log into the website in order to load questions on this page. If you are not logged in, please do so now.</p>
+          <h3 style={{ textAlign: "center" }}>Important Information</h3>
+          <p>
+            If this is the first time in a while that you are using this
+            website, it may take a long time to load initially. This is normal
+            and it should be faster afterwards
+          </p>
+          <p>
+            You need to log into the website in order to load questions on this
+            page. If you are not logged in, please do so now.
+          </p>
           <h3 style={{ textAlign: "center" }}>Filters</h3>
-          <p>Select checkboxes to enable/disable filters. Use drop down menus to adjust filter settings.</p>
+          <p>
+            Select checkboxes to enable/disable filters. Use drop down menus to
+            adjust filter settings.
+          </p>
           <form>
             <ul>
               <li>
-                <label htmlFor="level">Level<br /></label>
-                <input type="checkbox" className="inputbox" id="level-enabled" name="Level" />
+                <label htmlFor="level">
+                  Level
+                  <br />
+                </label>
+                <input
+                  type="checkbox"
+                  className="inputbox"
+                  id="level-enabled"
+                  name="Level"
+                />
                 <select id="level" className="select-box">
                   {filters.level.map((level, index) => (
                     <option key={index} value={level}>
@@ -123,8 +166,16 @@ export function QuizBowl() {
                 </select>
               </li>
               <li>
-                <label htmlFor="species">Species<br /></label>
-                <input type="checkbox" className="inputbox" id="species-enabled" name="Species" />
+                <label htmlFor="species">
+                  Species
+                  <br />
+                </label>
+                <input
+                  type="checkbox"
+                  className="inputbox"
+                  id="species-enabled"
+                  name="Species"
+                />
                 <select id="species" className="select-box">
                   {filters.species.map((species, index) => (
                     <option key={index} value={species}>
@@ -134,8 +185,16 @@ export function QuizBowl() {
                 </select>
               </li>
               <li>
-                <label htmlFor="resource">Resource<br /></label>
-                <input type="checkbox" className="inputbox" id="resource-enabled" name="Resource" />
+                <label htmlFor="resource">
+                  Resource
+                  <br />
+                </label>
+                <input
+                  type="checkbox"
+                  className="inputbox"
+                  id="resource-enabled"
+                  name="Resource"
+                />
                 <select id="resource" className="select-box">
                   {filters.resource.map((resource, index) => (
                     <option key={index} value={resource}>
@@ -145,8 +204,16 @@ export function QuizBowl() {
                 </select>
               </li>
               <li>
-                <label htmlFor="topic">Topic<br /></label>
-                <input type="checkbox" className="inputbox" id="topic-enabled" name="Topic" />
+                <label htmlFor="topic">
+                  Topic
+                  <br />
+                </label>
+                <input
+                  type="checkbox"
+                  className="inputbox"
+                  id="topic-enabled"
+                  name="Topic"
+                />
                 <select id="topic" className="select-box">
                   {filters.topic.map((topic, index) => (
                     <option key={index} value={topic}>
@@ -163,20 +230,37 @@ export function QuizBowl() {
         </div>
       </aside>
       <div className="question-holder">
-        <h2>Questions</h2>
-        <ol>
-          {randomQuestions.map((question, index) => (
-            <li key={index} className="question-individual">
-              <p>
-                <strong>{question.Question}</strong>
-                <br />
-                Answer: {question.Answer}
-                <br />
-                <i>Level: {question.Level} &nbsp; | &nbsp; Species: {question.Species} &nbsp; | &nbsp; Topic: {question.Topic} &nbsp; | &nbsp; Resource: {question.Resource} &nbsp; | &nbsp; ID: {question.id}</i>
-              </p>
-            </li>
-          ))}
-        </ol>
+        <h2 className="content-container">Questions</h2>
+
+        {randomQuestions.map((question, index) => (
+          <div
+            key={index}
+            className="question-card"
+            onClick={() => handleQuestionClick(question)}
+          >
+            <p>
+              <strong>{question.Question}</strong>
+              <br />
+              Answer: {question.Answer}
+            </p>
+            {/* Additional information that is shown when a card is clicked */}
+            {selectedQuestion && selectedQuestion.id === question.id && (
+              <div>
+                <p>
+                  Level: {question.Level} | Species: {question.Species} | Topic:{" "}
+                  {question.Topic} | Resource: {question.Resource} | ID:{" "}
+                  {question.id}
+                </p>
+                <div className="action-buttons">
+                  {/* Edit button */}
+                  <button onClick={handleEditClick}>Edit</button>
+                  {/* Delete button */}
+                  <button onClick={handleDeleteClick}>Delete</button>
+                </div>
+              </div>
+            )}
+          </div>
+        ))}
       </div>
     </div>
   );
