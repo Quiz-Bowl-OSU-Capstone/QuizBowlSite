@@ -1,8 +1,9 @@
 import { NavLink, Outlet, useRouteError } from "react-router-dom";
+import { CookiesProvider } from 'react-cookie';
 
 export default function App() {
   return (
-    <>
+    <CookiesProvider defaultSetOptions={{path: '/', maxAge: 7200}}>
       <nav className="navbar">
         <NavLink to="/">Quiz Bowl</NavLink>
         <NavLink to="/login">Login</NavLink>
@@ -11,7 +12,7 @@ export default function App() {
         <NavLink to="/help">Help</NavLink>
       </nav>
       <main>{<Outlet />}</main>
-    </>
+    </CookiesProvider>
   );
 }
 
