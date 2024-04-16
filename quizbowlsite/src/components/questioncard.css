@@ -4,9 +4,10 @@
   border: 1px solid #ddd;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  padding: 20px;
+  padding: 10px;
   width: 150px;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
+  margin-top: 10px;
   transition: transform 0.3s ease-in-out;
   width: 120%;
   box-sizing: border-box;
@@ -29,16 +30,20 @@
   overflow-y: auto;
 }
 
+.question-info-holder {
+  padding: 10px;
+}
+
 .action-buttons {
   display: flex;
   margin-left: 20px;
 }
 
 .action-buttons button {
-  background-color: #007bff;
+  background-color: rgb(215, 63, 9);
   color: #fff;
   border: none;
-  border-radius: 5px;
+  border-radius: 8px;
   padding: 8px 12px;
   cursor: pointer;
   transition: background-color 0.3s ease-in-out;
@@ -46,5 +51,5 @@
 }
 
 .action-buttons button:hover {
-  background-color: #0056b3;
+  background-color: rgb(245, 83, 29);
 }

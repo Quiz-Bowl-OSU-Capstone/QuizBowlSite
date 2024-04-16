@@ -1,9 +1,14 @@
 @import url("https://fonts.googleapis.com/css2?family=Exo&display=swap");
 
+html {
+}
+
 body {
   margin: 0;
   background-color: rgb(227, 220, 218);
   font-family: "Exo", sans-serif;
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
 }
 
 button {
@@ -13,7 +18,7 @@ button {
   color: black;
   border-radius: 5px;
   height: 30px;
-  min-width: 150px;
+  min-width: 100px;
   margin: 5px;
 }
 
@@ -26,15 +31,14 @@ button:active {
   background-color: #BBBBBB;
 }
 
-/* Hide scrollbar for Chrome, Safari and Opera */
-.example::-webkit-scrollbar {
-  display: none;
-}
-
 /* Hide scrollbar for IE, Edge and Firefox */
 .example {
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
+}
+
+.about-div {
+  padding: 10px;
 }
 
 a.active {
@@ -75,7 +79,6 @@ a.active {
 }
 
 .sidebar {
-  width: 250px;
   background-color: #444444;
   color: white;
   padding: 10px;
@@ -115,15 +118,22 @@ a.active {
   padding: 5px 0;
 }
 
+.main-holder {
+  display: flex;
+  justify-content: center;
+}
+
 .content-holder {
   display: flex;
   justify-content: left;
+  width: 25em;
 }
 
 .question-holder {
   padding-left: 20px;
   padding-right: 10px;
-  max-width: 80%;
+  width: calc(100% - 25em);
+  height: fit-content;
 }
 
 .question-individual {
@@ -139,4 +149,5 @@ a.active {
   width: 120px;
   height: 30px;
   padding: 5px;
+  border-radius: 5px;
 }
