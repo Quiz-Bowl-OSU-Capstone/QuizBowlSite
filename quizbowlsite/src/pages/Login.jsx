@@ -1,7 +1,7 @@
 import { useCookies } from "react-cookie";
 
 export function Login() {
-  const [cookies, setCookie] = useCookies(["user"]);
+  const [cookies, setCookie, removeCookie] = useCookies(["user"]);
 
   async function handleLogin() {
     try {
@@ -23,6 +23,8 @@ export function Login() {
           uid: data.uid,
           username: data.username
         });
+      } else {
+        removeCookie('auth');
       }
     } catch (error) {
       console.error("Error fetching account details:", error);

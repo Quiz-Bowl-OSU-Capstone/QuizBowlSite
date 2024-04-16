@@ -1,19 +1,27 @@
 import React, { useState, useEffect } from "react";
+import { useCookies } from "react-cookie";
 import "../components/questioncard.css";
 
 export function QuizBowl() {
-  const [filters, setFilters] = useState({
+  var [filters, setFilters] = useState({
     species: ["Loading..."],
     resource: ["Loading..."],
     level: ["Loading..."],
     topic: ["Loading..."],
   });
+  const [cookies, setCookie, removeCookie] = useCookies(["user"]);
 
   const [randomQuestions, setRandomQuestions] = useState([]);
   const [selectedQuestion, setSelectedQuestion] = useState(null);
 
   async function handleClick() {
     var params = "";
+
+    if (cookies.auth.uid > 0) {
+      params += "?uid=" + cookies.auth.uid;
+    } else {
+      params += "?uid=0";
+    }
 
     if (document.getElementById("level-enabled").checked) {
       params += "&level=" + document.getElementById("level").value;
@@ -61,7 +69,7 @@ export function QuizBowl() {
     try {
       document.getElementById("gen-questions").setAttribute("disabled", "true");
       const response = await fetch(
-        "https://qzblapi.azurewebsites.net/api/PickRandomQuestions?uid=1" +
+        "https://qzblapi.azurewebsites.net/api/PickRandomQuestions" +
           params
       );
       if (!response.ok) {
@@ -100,7 +108,7 @@ export function QuizBowl() {
           .getElementById("gen-questions")
           .setAttribute("disabled", "true");
         const response = await fetch(
-          "https://qzblapi.azurewebsites.net/api/SearchFilters?uid=1"
+          "https://qzblapi.azurewebsites.net/api/SearchFilters?uid=" + cookies.auth.uid
         );
         if (!response.ok) {
           throw new Error("Failed to fetch filters");
@@ -125,7 +133,11 @@ export function QuizBowl() {
       }
     }
 
-    fetchFilters();
+    if (cookies.auth.uid > 0) {
+      fetchFilters();
+    } else {
+      document.getElementById("gen-questions").setAttribute("disabled", "true").setText("Please log in to generate questions");
+    }
   }, []);
 
   return (

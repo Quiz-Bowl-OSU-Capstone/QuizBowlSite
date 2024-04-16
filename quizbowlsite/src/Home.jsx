@@ -3,7 +3,7 @@ import { CookiesProvider } from 'react-cookie';
 
 export default function App() {
   return (
-    <CookiesProvider defaultSetOptions={{path: '/', maxAge: 7200}}>
+    <CookiesProvider defaultSetOptions={{path: '/', maxAge: 180}}>
       <nav className="navbar">
         <NavLink to="/">Quiz Bowl</NavLink>
         <NavLink to="/login">Login</NavLink>
