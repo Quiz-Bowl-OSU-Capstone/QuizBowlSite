@@ -35,11 +35,6 @@
 }
 
 .action-buttons {
-  display: flex;
-  margin-left: 20px;
-}
-
-.action-buttons button {
   background-color: rgb(215, 63, 9);
   color: #fff;
   border: none;
@@ -50,6 +45,22 @@
   margin-left: 10px;
 }
 
-.action-buttons button:hover {
+.action-buttons:hover {
   background-color: rgb(245, 83, 29);
 }
+
+.buttons-dark {
+  color: white;
+  background-color: #222222;
+  border: 2px none;
+  border-radius: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
+  margin-left: 10px;
+}
+
+.buttons-dark:hover {
+  background-color: rgb(215, 63, 9);
+}
+

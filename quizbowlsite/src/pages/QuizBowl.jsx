@@ -57,12 +57,19 @@ export function QuizBowl() {
     // Edit
   }
 
-  function handleRemoveClick() {
+  function handleReplaceClick() {
+    if (window.confirm("By clicking OK, you are going to replace this question with a new randomly-selected question from the database. Are you sure?")) {
+      console.log("Confirmed replace operation.");
+      // Put code here to replace that question.
+    }
   }
 
   // Function to handle delete button click
   function handleDeleteClick() {
-    // Add
+    if (window.confirm("By clicking OK, you are going to permanently delete this question from both this list and the database. Are you sure?")) {
+      console.log("Confirmed delete operation.");
+      // Put code here to delete that question.
+    }
   }
 
   async function fetchRandomQuestions(params) {
@@ -132,11 +139,13 @@ export function QuizBowl() {
         console.error("Error fetching filters:", error);
       }
     }
-
-    if (cookies.auth.uid > 0) {
-      fetchFilters();
-    } else {
-      document.getElementById("gen-questions").setAttribute("disabled", "true").setText("Please log in to generate questions");
+    
+    try {
+      if (cookies.auth.uid > 0) {
+        fetchFilters();
+      }
+    } catch (error) {
+      document.getElementById("gen-questions").setAttribute("disabled", "true")
     }
   }, []);
 
@@ -268,13 +277,13 @@ export function QuizBowl() {
                   Resource: {question.Resource} | ID:{" "}
                   {question.id}
                 </p>
-                <div className="action-buttons">
+                <div>
                   {/* Edit button */}
-                  <button onClick={handleEditClick}>Edit</button>
+                  <button className="action-buttons" onClick={() => { handleEditClick() }}>Edit</button>
                   {/* Remove button */}
-                  <button onClick={handleRemoveClick}>Remove</button>
+                  <button className="action-buttons" onClick={() => { handleReplaceClick() }}>Replace</button>
                   {/* Delete button */}
-                  <button onClick={handleDeleteClick}>Delete</button>
+                  <button className="buttons-dark" onClick={() => { handleDeleteClick() }}>Delete</button>
                 </div>
               </div>
             )}
