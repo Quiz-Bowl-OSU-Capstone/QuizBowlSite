@@ -2,11 +2,11 @@ import { NavLink, Outlet, useRouteError } from "react-router-dom";
 import { CookiesProvider } from 'react-cookie';
 
 export default function App() {
+
   return (
     <CookiesProvider defaultSetOptions={{path: '/', maxAge: 3600}}>
       <nav className="navbar">
         <NavLink to="/">Quiz Bowl</NavLink>
-        <NavLink to="/login">Login</NavLink>
         <NavLink to="/about">About</NavLink>
         <NavLink to="/contact">Contact</NavLink>
         <NavLink to="/help">Help</NavLink>

@@ -17,7 +17,7 @@ export function QuizBowl() {
   async function handleClick() {
     var params = "";
 
-    if (cookies.auth.uid > 0) {
+    if (cookies.auth) {
       params += "?uid=" + cookies.auth.uid;
     } else {
       params += "?uid=0";
@@ -69,6 +69,114 @@ export function QuizBowl() {
     if (window.confirm("By clicking OK, you are going to permanently delete this question from both this list and the database. Are you sure?")) {
       console.log("Confirmed delete operation.");
       // Put code here to delete that question.
+    }
+  }
+
+  function AccountStatus({ user, filters }) {
+    if (user != undefined && user.uid > 0) {
+      return (
+        <div>
+          <h3 style={{ textAlign: "center" }}>Filters</h3>
+          <p>
+            Select checkboxes to enable/disable filters. Use drop down menus to
+            adjust filter settings.
+          </p>
+          <form>
+            <ul>
+              <li>
+                <label htmlFor="level">
+                  Level
+                  <br />
+                </label>
+                <input
+                  type="checkbox"
+                  className="inputbox"
+                  id="level-enabled"
+                  name="Level"
+                />
+                <select id="level" className="select-box">
+                  {filters.level.map((level, index) => (
+                    <option key={index} value={level}>
+                      {level}
+                    </option>
+                  ))}
+                </select>
+              </li>
+              <li>
+                <label htmlFor="species">
+                  Species
+                  <br />
+                </label>
+                <input
+                  type="checkbox"
+                  className="inputbox"
+                  id="species-enabled"
+                  name="Species"
+                />
+                <select id="species" className="select-box">
+                  {filters.species.map((species, index) => (
+                    <option key={index} value={species}>
+                      {species}
+                    </option>
+                  ))}
+                </select>
+              </li>
+              <li>
+                <label htmlFor="resource">
+                  Resource
+                  <br />
+                </label>
+                <input
+                  type="checkbox"
+                  className="inputbox"
+                  id="resource-enabled"
+                  name="Resource"
+                />
+                <select id="resource" className="select-box">
+                  {filters.resource.map((resource, index) => (
+                    <option key={index} value={resource}>
+                      {resource}
+                    </option>
+                  ))}
+                </select>
+              </li>
+              <li>
+                <label htmlFor="topic">
+                  Topic
+                  <br />
+                </label>
+                <input
+                  type="checkbox"
+                  className="inputbox"
+                  id="topic-enabled"
+                  name="Topic"
+                />
+                <select id="topic" className="select-box">
+                  {filters.topic.map((topic, index) => (
+                    <option key={index} value={topic}>
+                      {topic}
+                    </option>
+                  ))}
+                </select>
+              </li>
+            </ul>
+          </form>
+          <button id="gen-questions" onClick={handleClick}>
+            Generate Questions
+          </button>
+        </div>
+      )
+    } else {
+      return (
+        <div>
+          <p>
+            You are not logged in. Please log in to view questions.
+          </p>
+          <button id="gen-questions" onClick={() => { window.location.href="/login" }}>
+            Login
+          </button>
+        </div>
+      )
     }
   }
 
@@ -145,7 +253,7 @@ export function QuizBowl() {
         fetchFilters();
       }
     } catch (error) {
-      document.getElementById("gen-questions").setAttribute("disabled", "true")
+      console.log(error);
     }
   }, []);
 
@@ -160,98 +268,7 @@ export function QuizBowl() {
               website, it may take a long time to load initially. This is normal
               and it should be faster afterwards
             </p>
-            <p>
-              You need to log into the website in order to load questions on this
-              page. If you are not logged in, please do so now.
-            </p>
-            <h3 style={{ textAlign: "center" }}>Filters</h3>
-            <p>
-              Select checkboxes to enable/disable filters. Use drop down menus to
-              adjust filter settings.
-            </p>
-            <form>
-              <ul>
-                <li>
-                  <label htmlFor="level">
-                    Level
-                    <br />
-                  </label>
-                  <input
-                    type="checkbox"
-                    className="inputbox"
-                    id="level-enabled"
-                    name="Level"
-                  />
-                  <select id="level" className="select-box">
-                    {filters.level.map((level, index) => (
-                      <option key={index} value={level}>
-                        {level}
-                      </option>
-                    ))}
-                  </select>
-                </li>
-                <li>
-                  <label htmlFor="species">
-                    Species
-                    <br />
-                  </label>
-                  <input
-                    type="checkbox"
-                    className="inputbox"
-                    id="species-enabled"
-                    name="Species"
-                  />
-                  <select id="species" className="select-box">
-                    {filters.species.map((species, index) => (
-                      <option key={index} value={species}>
-                        {species}
-                      </option>
-                    ))}
-                  </select>
-                </li>
-                <li>
-                  <label htmlFor="resource">
-                    Resource
-                    <br />
-                  </label>
-                  <input
-                    type="checkbox"
-                    className="inputbox"
-                    id="resource-enabled"
-                    name="Resource"
-                  />
-                  <select id="resource" className="select-box">
-                    {filters.resource.map((resource, index) => (
-                      <option key={index} value={resource}>
-                        {resource}
-                      </option>
-                    ))}
-                  </select>
-                </li>
-                <li>
-                  <label htmlFor="topic">
-                    Topic
-                    <br />
-                  </label>
-                  <input
-                    type="checkbox"
-                    className="inputbox"
-                    id="topic-enabled"
-                    name="Topic"
-                  />
-                  <select id="topic" className="select-box">
-                    {filters.topic.map((topic, index) => (
-                      <option key={index} value={topic}>
-                        {topic}
-                      </option>
-                    ))}
-                  </select>
-                </li>
-              </ul>
-            </form>
-            <button id="gen-questions" onClick={handleClick}>
-              Generate Questions
-            </button>
+            <AccountStatus user={cookies.auth} filters={filters} />
           </div>
         </aside>
       </div>
