@@ -30,11 +30,11 @@ export function Login() {
       } else {
         removeCookie('auth');
         window.alert("Invalid username or password");
-        document.getElementById("login-button").setAttribute("disabled", "false");
+        document.getElementById("login-button").removeAttribute("disabled");
       }
     } catch (error) {
       console.error("Error fetching account details:", error);
-      document.getElementById("login-button").setAttribute("disabled", "false");
+      document.getElementById("login-button").removeAttribute("disabled");
     }
   }
 
@@ -51,7 +51,7 @@ export function Login() {
           <input type="text" id="password" placeholder="Enter Password" />
         </label>
         <br />
-        <button id="login-button" onClick={handleLogin}>Login</button>
+        <button id="login-button" onClick={() => { handleLogin() }}>Login</button>
       </div>
     </>
   );
