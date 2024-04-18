@@ -76,6 +76,12 @@ export function QuizBowl() {
     if (user != undefined && user.uid > 0) {
       return (
         <div>
+          <p>
+            You're logged in as <strong>{cookies.auth.username}</strong>.
+          </p>
+          <button id="login-button" onClick={() => { removeCookie("auth"); window.location.reload() }}>
+            Log out
+          </button>
           <h3 style={{ textAlign: "center" }}>Filters</h3>
           <p>
             Select checkboxes to enable/disable filters. Use drop down menus to
@@ -172,7 +178,7 @@ export function QuizBowl() {
           <p>
             You are not logged in. Please log in to view questions.
           </p>
-          <button id="gen-questions" onClick={() => { window.location.href="/login" }}>
+          <button id="login-button" onClick={() => { window.location.href="/login" }}>
             Login
           </button>
         </div>
@@ -266,7 +272,7 @@ export function QuizBowl() {
             <p>
               If this is the first time in a while that you are using this
               website, it may take a long time to load initially. This is normal
-              and it should be faster afterwards
+              and it should be faster afterwards.
             </p>
             <AccountStatus user={cookies.auth} filters={filters} />
           </div>
