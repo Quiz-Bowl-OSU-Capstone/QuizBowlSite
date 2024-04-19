@@ -9,6 +9,37 @@ export function QuizBowl() {
   });
 
   const [randomQuestions, setRandomQuestions] = useState([]);
+  const [editQuestionId, setEditQuestionId] = useState(null);
+  const [editFormData, setEditFormData] = useState({});
+
+  const handleEdit = (question) => {
+    setEditQuestionId(question.id);
+    setEditFormData({
+      Question: question.Question,
+      Answer: question.Answer,
+      Level: question.Level,
+      Species: question.Species,
+      Topic: question.Topic,
+      Resource: question.Resource
+    });
+  };
+
+  const handleInputChange = (field, value) => {
+    setEditFormData(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handleSave = () => {
+    const updatedQuestions = randomQuestions.map(question => {
+      if (question.id === editQuestionId) {
+        return { ...question, ...editFormData };
+      }
+      return question;
+    });
+    setRandomQuestions(updatedQuestions);
+    setEditQuestionId(null);
+    setEditFormData({});
+  };
+
 
   async function handleClick() {
     var params = "";
@@ -165,15 +196,29 @@ export function QuizBowl() {
       <div className="question-holder">
         <h2>Questions</h2>
         <ol>
-          {randomQuestions.map((question, index) => (
-            <li key={index} className="question-individual">
-              <p>
-                <strong>{question.Question}</strong>
-                <br />
-                Answer: {question.Answer}
-                <br />
-                <i>Level: {question.Level} &nbsp; | &nbsp; Species: {question.Species} &nbsp; | &nbsp; Topic: {question.Topic} &nbsp; | &nbsp; Resource: {question.Resource} &nbsp; | &nbsp; ID: {question.id}</i>
-              </p>
+          {randomQuestions.map((question) => (
+            <li key={question.id} className="question-individual">
+              {editQuestionId === question.id ? (
+                <div>
+                  <input type="text" value={editFormData.Question} onChange={(e) => handleInputChange('Question', e.target.value)} />
+                  <input type="text" value={editFormData.Answer} onChange={(e) => handleInputChange('Answer', e.target.value)} />
+                  <input type="text" value={editFormData.Level} onChange={(e) => handleInputChange('Level', e.target.value)} />
+                  <input type="text" value={editFormData.Species} onChange={(e) => handleInputChange('Species', e.target.value)} />
+                  <input type="text" value={editFormData.Topic} onChange={(e) => handleInputChange('Topic', e.target.value)} />
+                  <input type="text" value={editFormData.Resource} onChange={(e) => handleInputChange('Resource', e.target.value)} />
+                  <button onClick={handleSave}>Save</button>
+                </div>
+              ) : (
+                <p>
+                  <strong>{question.Question}</strong>
+                  <br />
+                  Answer: {question.Answer}
+                  <br />
+                  <i>Level: {question.Level} &nbsp; | &nbsp; Species: {question.Species} &nbsp; | &nbsp; Topic: {question.Topic} &nbsp; | &nbsp; Resource: {question.Resource} &nbsp; | &nbsp; ID: {question.id}</i>
+                  <br />
+                  <button onClick={() => handleEdit(question)}>Edit</button>
+                </p>
+              )}
             </li>
           ))}
         </ol>
