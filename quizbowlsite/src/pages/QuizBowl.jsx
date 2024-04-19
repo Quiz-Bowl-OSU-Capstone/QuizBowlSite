@@ -101,8 +101,8 @@ export function QuizBowl() {
           </button>
           <h3 style={{ textAlign: "center" }}>Filters</h3>
           <p>
-            Select checkboxes to enable/disable filters. Use drop down menus to
-            adjust filter settings.
+            Use drop down menus to adjust filter settings. By default, all filters are off. Each time you click the Generate Questions button, 12 questions will
+            randomly be pulled from the database, according to the filters you have set.
           </p>
           <form>
             <ul>
