@@ -2,6 +2,7 @@ import { useCookies } from "react-cookie";
 
 export function Login() {
   const [cookies, setCookie, removeCookie] = useCookies(["user"]);
+  var loggedIn = false;
 
   var handleEnterKey = (event) => {
     if (event.key === "Enter") {
@@ -12,6 +13,11 @@ export function Login() {
   async function handleLogin() {
     document.getElementById("login-button").setAttribute("disabled", "true");
     document.getElementById("login-loading").style.display = "flex";
+    setTimeout(() => {
+      if (loggedIn === false) {
+        document.getElementById("login-extra-dialog").style.display = "block";
+      } 
+    }, 5000);
     try {
       var username = document.getElementById("username").value;
       var password = document.getElementById("password").value;
@@ -30,6 +36,7 @@ export function Login() {
           uid: data.uid,
           username: data.username
         });
+        loggedIn = true;
         console.log("Logged in as", data.username);
         window.alert("You were successfully logged in as " + data.username + "! Once you click OK, the page will refresh and return you to the main question screen.");
         window.location.href = "/";
@@ -59,6 +66,10 @@ export function Login() {
         <br />
         <button id="login-button" onClick={() => { handleLogin() }}>Login</button>
         <img src="loading.gif" className="loading-symbol" id="login-loading"/>
+        <div className="dialog-div" id="login-extra-dialog">
+          <h4>Looks like this is taking awhile.</h4>
+          <p>If this is the first time that you've used the website in the last 2 hrs or so, the website is likely still restarting. Please do not refresh the page unless you receive an error.</p>
+        </div>
       </div>
     </>
   );

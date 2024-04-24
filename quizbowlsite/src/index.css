@@ -84,6 +84,12 @@ a.active {
   background-color: #EEEEEE;
 }
 
+.dialog-div {
+  width: 300px;
+  margin: auto;
+  display: none;
+}
+
 .dialog input {
   font-size: 16px;
   padding: 5px;
