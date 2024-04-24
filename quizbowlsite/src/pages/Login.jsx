@@ -3,14 +3,20 @@ import { useCookies } from "react-cookie";
 export function Login() {
   const [cookies, setCookie, removeCookie] = useCookies(["user"]);
 
+  var handleEnterKey = (event) => {
+    if (event.key === "Enter") {
+      handleLogin();
+    }
+  }
+
   async function handleLogin() {
     document.getElementById("login-button").setAttribute("disabled", "true");
+    document.getElementById("login-loading").style.display = "flex";
     try {
-      console.log("Logging in...");
       var username = document.getElementById("username").value;
       var password = document.getElementById("password").value;
       var params = "?username=" + username + "&password=" + password;
-      console.log(params);
+      console.log("Attempting to log in with username: ", username);
       const response = await fetch(
         "https://qzblapi.azurewebsites.net/api/ValidAccount" +
           params
@@ -25,16 +31,18 @@ export function Login() {
           username: data.username
         });
         console.log("Logged in as", data.username);
-        window.alert("Successfully logged in as " + data.username);
+        window.alert("You were successfully logged in as " + data.username + "! Once you click OK, the page will refresh and return you to the main question screen.");
         window.location.href = "/";
       } else {
         removeCookie('auth');
-        window.alert("Invalid username or password");
+        window.alert("Invalid username or password. Please try again.");
         document.getElementById("login-button").removeAttribute("disabled");
+        document.getElementById("login-loading").style.display = "none";
       }
     } catch (error) {
       console.error("Error fetching account details:", error);
       document.getElementById("login-button").removeAttribute("disabled");
+      document.getElementById("login-loading").style.display = "none";
     }
   }
 
@@ -42,16 +50,15 @@ export function Login() {
     <>
       <div className="dialog">
         <label>
-          Username:
-          <input type="text" id="username" placeholder="Enter Username/Email" />
+          <input type="text" id="username" placeholder="Username" onKeyDown={handleEnterKey}/>
         </label>
         <br />
         <label>
-          Password:
-          <input type="text" id="password" placeholder="Enter Password" />
+          <input type="password" id="password" placeholder="Password" onKeyDown={handleEnterKey}/>
         </label>
         <br />
         <button id="login-button" onClick={() => { handleLogin() }}>Login</button>
+        <img src="loading.gif" className="loading-symbol" id="login-loading"/>
       </div>
     </>
   );
