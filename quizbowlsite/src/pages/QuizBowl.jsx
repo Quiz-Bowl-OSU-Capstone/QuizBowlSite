@@ -58,6 +58,15 @@ export function QuizBowl() {
       localStorage.removeItem("topic");
     }
 
+    if (document.getElementById("last-used-before-date").value) {
+      params += "&lastusedbefore=" + encodeURIComponent(new Date(document.getElementById("last-used-before-date").value).toJSON());
+      localStorage.setItem("lastusedbefore", document.getElementById("last-used-before-date").value);
+    } else {
+      localStorage.removeItem("lastusedbefore");
+    }
+
+    console.log("Params: ", params);
+
     fetchRandomQuestions(params);
   }
 
@@ -123,8 +132,7 @@ export function QuizBowl() {
           <hr />
           <h3 style={{ textAlign: "center" }}>Filters</h3>
           <p>
-            Select checkboxes to enable/disable filters. Use drop down menus to
-            adjust filter settings.
+            Use drop down boxes and date selectors to enable or disable filters. Click the "Generate Questions" button to get a list of questions based on the filters you've selected, or click Download PDF in order to download a PDF of the currently shown questions.
           </p>
           <form>
             <ul>
@@ -180,6 +188,12 @@ export function QuizBowl() {
                   </select>
                 </label>
               </li>
+              <li>
+                <label htmlFor="date">
+                  Last Used Before:
+                  <input type="date" className="select-box" id="last-used-before-date"/>
+                </label>
+              </li>
             </ul>
           </form>
           <button id="gen-questions" onClick={handleClick}>
@@ -197,7 +211,7 @@ export function QuizBowl() {
             </button>
             <hr />
             <h3 style={{ textAlign: "center" }}>Help Improve Quizpedia</h3>
-            <p>Have some spare time or want to help? Quizpedia could use it! We mainly need help with reviewing the database of questions, as there are many little issues  </p>
+            <p>Have some spare time or want to help? Quizpedia could use it! We mainly need help with reviewing the database of questions, but if you see an issue somewhere, let us know!</p>
         </div>
       )
     } else {
