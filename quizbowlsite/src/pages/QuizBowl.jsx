@@ -206,8 +206,8 @@ export function QuizBowl() {
                 "backgroundColor": "white", 
                 "color": "black", 
                 "borderRadius": "5px",
-                "padding": "10px"}}>
-            {({ blob, url, loading, error }) => loading ? "Loading..." : "Download PDF"}</PDFDownloadLink>
+                "padding": "10px"}
+                }>Download PDF</PDFDownloadLink>
             </button>
             <hr />
             <h3 style={{ textAlign: "center" }}>Help Improve Quizpedia</h3>
@@ -229,6 +229,49 @@ export function QuizBowl() {
         </div>
       )
     }
+  }
+
+  function QuestionDisplay({}) {
+    return (
+      <div className="question-holder">
+        {randomQuestions.map((question, index) => (
+          <div
+            key={index}
+            className="question-card"
+            onClick={() => handleQuestionClick(question)}
+          >
+            <p>
+              <strong>{question.Question}</strong>
+              <br />
+              Answer: {question.Answer}
+              <br />
+              <i>Level: {question.Level} | Species: {question.Species} | Topic:{" "}
+                  {question.Topic}</i>
+            </p>
+            {/* Additional information that is shown when a card is clicked */}
+            {selectedQuestion && selectedQuestion.id === question.id && (
+              <div className="question-info-holder">
+                <p>
+                  Resource: {question.Resource} | ID: {question.id}<br />
+                  Last Used: {question.lastusagedate} | Last Event Used At: {question.lastusageevent}
+                </p>
+                <div>
+                  {/* Edit button */}
+                  <button className="action-buttons" onClick={() => { handleEditClick() }}>Edit</button>
+                  {/* Remove button */}
+                  <button className="action-buttons" onClick={() => { handleReplaceClick() }}>Replace</button>
+                  {/* Delete button */}
+                  <button className="buttons-dark" onClick={() => { handleDeleteClick() }}>Delete</button>
+                </div>
+              </div>
+            )}
+          </div>
+        ))}
+        {randomQuestions.length < 12 ? (
+          <p style={{"padding":"20px"}}>You are seeing fewer questions than you expect because not enough questions match your search filters. Try different or fewer filters.</p>
+        ): ""}
+      </div>
+    )
   }
 
   async function fetchRandomQuestions(params) {
@@ -373,44 +416,7 @@ export function QuizBowl() {
           </div>
         </aside>
       </div>
-      <div className="question-holder">
-        {randomQuestions.map((question, index) => (
-          <div
-            key={index}
-            className="question-card"
-            onClick={() => handleQuestionClick(question)}
-          >
-            <p>
-              <strong>{question.Question}</strong>
-              <br />
-              Answer: {question.Answer}
-              <br />
-              <i>Level: {question.Level} | Species: {question.Species} | Topic:{" "}
-                  {question.Topic}</i>
-            </p>
-            {/* Additional information that is shown when a card is clicked */}
-            {selectedQuestion && selectedQuestion.id === question.id && (
-              <div className="question-info-holder">
-                <p>
-                  Resource: {question.Resource} | ID: {question.id}<br />
-                  Last Used: {question.lastusagedate} | Last Event Used At: {question.lastusageevent}
-                </p>
-                <div>
-                  {/* Edit button */}
-                  <button className="action-buttons" onClick={() => { handleEditClick() }}>Edit</button>
-                  {/* Remove button */}
-                  <button className="action-buttons" onClick={() => { handleReplaceClick() }}>Replace</button>
-                  {/* Delete button */}
-                  <button className="buttons-dark" onClick={() => { handleDeleteClick() }}>Delete</button>
-                </div>
-              </div>
-            )}
-          </div>
-        ))}
-        {randomQuestions.length < 12 ? (
-          <p style={{"padding":"20px"}}>You are seeing fewer questions than you expect because not enough questions match your search filters. Try different or fewer filters.</p>
-        ): ""}
-      </div>
+      <QuestionDisplay />
     </div>
   );
 }
