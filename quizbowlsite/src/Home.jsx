@@ -6,7 +6,7 @@ export default function App() {
   return (
     <CookiesProvider defaultSetOptions={{path: '/', maxAge: 3600}}>
       <nav className="navbar">
-        <NavLink to="/">Quiz Bowl</NavLink>
+        <NavLink to="/">Quizpedia</NavLink>
         <NavLink to="/about">About</NavLink>
         <NavLink to="/contact">Contact</NavLink>
         <NavLink to="/help">Help</NavLink>

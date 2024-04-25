@@ -2,7 +2,7 @@ import { useCookies } from "react-cookie";
 
 export function Login() {
   const [cookies, setCookie, removeCookie] = useCookies(["user"]);
-  var loggedIn = false;
+  var loading = false;
 
   var handleEnterKey = (event) => {
     if (event.key === "Enter") {
@@ -12,9 +12,10 @@ export function Login() {
 
   async function handleLogin() {
     document.getElementById("login-button").setAttribute("disabled", "true");
+    loading = true;
     document.getElementById("login-loading").style.display = "flex";
     setTimeout(() => {
-      if (loggedIn === false) {
+      if (loading) {
         document.getElementById("login-extra-dialog").style.display = "block";
       } 
     }, 5000);
@@ -36,18 +37,20 @@ export function Login() {
           uid: data.uid,
           username: data.username
         });
-        loggedIn = true;
+        loading = false;
         console.log("Logged in as", data.username);
-        window.alert("You were successfully logged in as " + data.username + "! Once you click OK, the page will refresh and return you to the main question screen.");
         window.location.href = "/";
       } else {
         removeCookie('auth');
+        loading = false;
         window.alert("Invalid username or password. Please try again.");
         document.getElementById("login-button").removeAttribute("disabled");
         document.getElementById("login-loading").style.display = "none";
+        document.getElementById("password").value = "";
       }
     } catch (error) {
       console.error("Error fetching account details:", error);
+      loading = false;
       document.getElementById("login-button").removeAttribute("disabled");
       document.getElementById("login-loading").style.display = "none";
     }
