@@ -239,9 +239,13 @@ export function QuizBowl() {
           if (data.questions[i].Level == null) {
             data.questions[i].Level = "N/A";
           }
+
           if (data.questions[i].lastusagedate == null) {
             data.questions[i].lastusagedate = "N/A";
+          } else {
+            data.questions[i].lastusagedate = new Date(data.questions[i].lastusagedate).toLocaleDateString();
           }
+
           if (data.questions[i].lastusageevent == null) {
             data.questions[i].lastusageevent = "N/A";
           }
@@ -371,8 +375,8 @@ export function QuizBowl() {
             {selectedQuestion && selectedQuestion.id === question.id && (
               <div className="question-info-holder">
                 <p>
-                  Resource: {question.Resource} | ID:{" "}
-                  {question.id}
+                  Resource: {question.Resource} | ID: {question.id}<br />
+                  Last Used: {question.lastusagedate} | Last Event Used At: {question.lastusageevent}
                 </p>
                 <div>
                   {/* Edit button */}
