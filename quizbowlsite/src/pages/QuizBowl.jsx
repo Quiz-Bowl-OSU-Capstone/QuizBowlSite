@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
+import { Document, Page, Text, View, StyleSheet, PDFViewer, PDFDownloadLink} from '@react-pdf/renderer';
 import { useCookies } from "react-cookie";
 import "../components/questioncard.css";
+import QuestionSheet from "../components/QuestionSheet.jsx";
 
 export function QuizBowl() {
   var [filters, setFilters] = useState({
@@ -56,6 +58,15 @@ export function QuizBowl() {
       localStorage.removeItem("topic");
     }
 
+    if (document.getElementById("last-used-before-date").value) {
+      params += "&lastusedbefore=" + encodeURIComponent(new Date(document.getElementById("last-used-before-date").value).toJSON());
+      localStorage.setItem("lastusedbefore", document.getElementById("last-used-before-date").value);
+    } else {
+      localStorage.removeItem("lastusedbefore");
+    }
+
+    console.log("Params: ", params);
+
     fetchRandomQuestions(params);
   }
 
@@ -89,20 +100,32 @@ export function QuizBowl() {
     }
   }
 
+  async function handleQuestionDownload() {
+    let event = prompt("Do you want to mark these questions as being used on today's date?\n\nClicking OK will mark the downloaded questions as having been last used on today's date. Clicking Cancel will not mark the questions as used, but will still download the questions to your computer.\n\nYou can optionally enter an event name for recordkeeping purposes, but this is not required.", "");
+
+    if (event != null) {
+      eventName = event.trim();
+      var questionIDs = randomQuestions.map((question) => question.id);
+
+      const response = await fetch(
+        "https://qzblapi.azurewebsites.net/api/LastUsage?uid=" + cookies.auth.uid + "&ids=" + encodeURIComponent(JSON.stringify(questionIDs)) + "&event=" + encodeURIComponent(event)
+      );
+      if (!response.ok) {
+        throw new Error("Failed to update lastUsage");
+      }
+      const data = await response.json();
+      
+      console.log(data);
+    }
+  }
+
   function AccountStatus({ user, filters }) {
     if (user != undefined && user.uid > 0) {
       return (
         <div>
-          <p>
-            You're logged in as <strong>{cookies.auth.username}</strong>.
-          </p>
-          <button id="login-button" onClick={() => { removeCookie("auth"); window.location.reload() }}>
-            Log out
-          </button>
           <h3 style={{ textAlign: "center" }}>Filters</h3>
           <p>
-            Use drop down menus to adjust filter settings. By default, all filters are off. Each time you click the Generate Questions button, 12 questions will
-            randomly be pulled from the database, according to the filters you have set.
+            Use drop down boxes and date selectors to enable or disable filters. Click the "Generate Questions" button to get a list of questions based on the filters you've selected, or click Download PDF in order to download a PDF of the currently shown questions.
           </p>
           <form>
             <ul>
@@ -158,25 +181,96 @@ export function QuizBowl() {
                   </select>
                 </label>
               </li>
+              <li>
+                <label htmlFor="date">
+                  Last Used Before:
+                  <input type="date" className="select-box" id="last-used-before-date"/>
+                </label>
+              </li>
             </ul>
           </form>
           <button id="gen-questions" onClick={handleClick}>
             Generate Questions
           </button>
+          <button id="gen-pdf" className="pdfbutton" onClick={handleQuestionDownload}>
+              <PDFDownloadLink document={<QuestionSheet questions={randomQuestions} username={cookies.auth.username} datetime={new Date().toLocaleString()} />} fileName={"quizpedia-" + cookies.auth.username + "-" + new Date().toLocaleDateString()}  style={{
+                "fontFamily": "Exo, sans-serif", 
+                "fontSize": "16px", 
+                "backgroundColor": "white", 
+                "color": "black", 
+                "borderRadius": "5px",
+                "padding": "10px"}
+                }>Download PDF</PDFDownloadLink>
+            </button>
+            <hr />
+            <h3 style={{ textAlign: "center" }}>Help Improve Quizpedia</h3>
+            <p>Have some spare time or want to help? Quizpedia could use it!</p>
+            <button id="data-integrity-page" onClick={() => { window.alert("We appreciate it, but this feature isn't built yet!") }}>
+              Help Improve Quizpedia
+            </button>
+            <hr />
+            <p>
+              You're logged in as <strong>{cookies.auth.username}</strong>.
+            </p>
+            <button id="login-button" onClick={() => { removeCookie("auth"); window.location.reload() }}>
+              Log out
+            </button>
         </div>
       )
     } else {
       return (
         <div>
-          <p>
-            You are not logged in. Please log in to view questions.
-          </p>
+          <h4>You're not logged in.</h4>
+          <p>Please log in to view questions and use the Quizpedia software.</p>
           <button id="login-button" onClick={() => { window.location.href="/login" }}>
             Login
           </button>
         </div>
       )
     }
+  }
+
+  function QuestionDisplay({}) {
+    return (
+      <div className="question-holder">
+        {randomQuestions.map((question, index) => (
+          <div
+            key={index}
+            className="question-card"
+            onClick={() => handleQuestionClick(question)}
+          >
+            <p>
+              <strong>{question.Question}</strong>
+              <br />
+              Answer: {question.Answer}
+              <br />
+              <i>Level: {question.Level} | Species: {question.Species} | Topic:{" "}
+                  {question.Topic}</i>
+            </p>
+            {/* Additional information that is shown when a card is clicked */}
+            {selectedQuestion && selectedQuestion.id === question.id && (
+              <div className="question-info-holder">
+                <p>
+                  Resource: {question.Resource} | ID: {question.id}<br />
+                  Last Used: {question.lastusagedate} | Last Event Used At: {question.lastusageevent}
+                </p>
+                <div>
+                  {/* Edit button */}
+                  <button className="action-buttons" onClick={() => { handleEditClick() }}>Edit</button>
+                  {/* Remove button */}
+                  <button className="action-buttons" onClick={() => { handleReplaceClick() }}>Replace</button>
+                  {/* Delete button */}
+                  <button className="buttons-dark" onClick={() => { handleDeleteClick() }}>Delete</button>
+                </div>
+              </div>
+            )}
+          </div>
+        ))}
+        {(randomQuestions.length < 12 && cookies.auth != undefined) ? (
+          <p style={{"padding":"20px"}}>No questions are currently being displayed. This could be because you just signed in, or because no questions matched your filters. Try again with different or fewer filters enabled if this is the case.</p>
+        ): ""}
+      </div>
+    )
   }
 
   async function fetchRandomQuestions(params) {
@@ -203,6 +297,16 @@ export function QuizBowl() {
           }
           if (data.questions[i].Level == null) {
             data.questions[i].Level = "N/A";
+          }
+
+          if (data.questions[i].lastusagedate == null) {
+            data.questions[i].lastusagedate = "N/A";
+          } else {
+            data.questions[i].lastusagedate = new Date(data.questions[i].lastusagedate).toLocaleDateString();
+          }
+
+          if (data.questions[i].lastusageevent == null) {
+            data.questions[i].lastusageevent = "N/A";
           }
         }
         setRandomQuestions(data.questions);
@@ -287,7 +391,7 @@ export function QuizBowl() {
             document.getElementById("topic").value = localStorage.topic;
           }
 
-        } else if (localStorage.questions && localStorage.lastuser) {
+        } else {
           localStorage.clear();
         }
       }
@@ -301,51 +405,11 @@ export function QuizBowl() {
       <div className="content-holder">
         <aside className="sidebar">
           <div className="filter-box">
-            <h3 style={{ textAlign: "center" }}>Important Information</h3>
-            <p>
-              If this is the first time in a while that you are using this
-              website, it may take a long time to load initially. This is normal
-              and it should be faster afterwards.
-            </p>
             <AccountStatus user={cookies.auth} filters={filters} />
           </div>
         </aside>
       </div>
-      <div className="question-holder">
-        {randomQuestions.map((question, index) => (
-          <div
-            key={index}
-            className="question-card"
-            onClick={() => handleQuestionClick(question)}
-          >
-            <p>
-              <strong>{question.Question}</strong>
-              <br />
-              Answer: {question.Answer}
-              <br />
-              <i>Level: {question.Level} | Species: {question.Species} | Topic:{" "}
-                  {question.Topic}</i>
-            </p>
-            {/* Additional information that is shown when a card is clicked */}
-            {selectedQuestion && selectedQuestion.id === question.id && (
-              <div className="question-info-holder">
-                <p>
-                  Resource: {question.Resource} | ID:{" "}
-                  {question.id}
-                </p>
-                <div>
-                  {/* Edit button */}
-                  <button className="action-buttons" onClick={() => { handleEditClick() }}>Edit</button>
-                  {/* Remove button */}
-                  <button className="action-buttons" onClick={() => { handleReplaceClick() }}>Replace</button>
-                  {/* Delete button */}
-                  <button className="buttons-dark" onClick={() => { handleDeleteClick() }}>Delete</button>
-                </div>
-              </div>
-            )}
-          </div>
-        ))}
-      </div>
+      <QuestionDisplay />
     </div>
   );
 }
