@@ -207,11 +207,14 @@ export function QuizBowl() {
                 "color": "black", 
                 "borderRadius": "5px",
                 "padding": "10px"}}>
-            {({ blob, url, loading, error }) => loading ? "Loading" : "Download PDF"}</PDFDownloadLink>
+            {({ blob, url, loading, error }) => loading ? "Loading..." : "Download PDF"}</PDFDownloadLink>
             </button>
             <hr />
             <h3 style={{ textAlign: "center" }}>Help Improve Quizpedia</h3>
-            <p>Have some spare time or want to help? Quizpedia could use it! We mainly need help with reviewing the database of questions, but if you see an issue somewhere, let us know!</p>
+            <p>Have some spare time or want to help? Quizpedia could use it!</p>
+            <button id="data-integrity-page" >
+              Help Improve Quizpedia
+            </button>
         </div>
       )
     } else {
@@ -404,6 +407,9 @@ export function QuizBowl() {
             )}
           </div>
         ))}
+        {randomQuestions.length < 12 ? (
+          <p style={{"padding":"20px"}}>You are seeing fewer questions than you expect because not enough questions match your search filters. Try different or fewer filters.</p>
+        ): ""}
       </div>
     </div>
   );
