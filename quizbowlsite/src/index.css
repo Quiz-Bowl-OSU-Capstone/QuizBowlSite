@@ -14,7 +14,8 @@ body {
 }
 
 hr {
-  margin: 20px;
+  margin: 20px auto;
+  width: 90%;
 }
 
 button {
@@ -50,7 +51,11 @@ button:active {
 }
 
 .about-div {
-  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 25px;
 }
 
 a.active {
@@ -114,7 +119,7 @@ a.active {
 .sidebar {
   background-color: #444444;
   color: white;
-  padding: 10px;
+  padding: 5px 20px;
   height: fill-available;
   min-height: calc(100vh - 80px);
   overflow: auto;
@@ -168,7 +173,11 @@ a.active {
 .content-holder {
   display: flex;
   justify-content: left;
-  width: 25em;
+  width: 30em;
+  min-width: 300px;
+  max-width: 500px;
+  margin: 0px;
+  padding: 0px;
 }
 
 .question-holder {

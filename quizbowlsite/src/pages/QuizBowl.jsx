@@ -193,28 +193,28 @@ export function QuizBowl() {
             Generate Questions
           </button>
           <button id="gen-pdf" className="pdfbutton" onClick={handleQuestionDownload}>
-              <PDFDownloadLink document={<QuestionSheet questions={randomQuestions} username={cookies.auth.username} datetime={new Date().toLocaleString()} />} fileName={"quizpedia-" + cookies.auth.username + "-" + new Date().toLocaleDateString()}  style={{
-                "fontFamily": "Exo, sans-serif", 
-                "fontSize": "16px", 
-                "backgroundColor": "white", 
-                "color": "black", 
-                "borderRadius": "5px",
-                "padding": "10px"}
-                }>Download PDF</PDFDownloadLink>
-            </button>
-            <hr />
-            <h3 style={{ textAlign: "center" }}>Help Improve Quizpedia</h3>
-            <p>Have some spare time or want to help? Quizpedia could use it!</p>
-            <button id="data-integrity-page" onClick={() => { window.alert("We appreciate it, but this feature isn't built yet!") }}>
-              Help Improve Quizpedia
-            </button>
-            <hr />
-            <p>
-              You're logged in as <strong>{cookies.auth.username}</strong>.
-            </p>
-            <button id="login-button" onClick={() => { removeCookie("auth"); window.location.reload() }}>
-              Log out
-            </button>
+            <PDFDownloadLink document={<QuestionSheet questions={randomQuestions} username={cookies.auth.username} datetime={new Date().toLocaleString()} />} fileName={"quizpedia-" + cookies.auth.username + "-" + new Date().toLocaleDateString()}  style={{
+              "fontFamily": "Exo, sans-serif", 
+              "fontSize": "16px", 
+              "backgroundColor": "white", 
+              "color": "black", 
+              "borderRadius": "5px",
+              "padding": "10px"}
+              }>Download PDF</PDFDownloadLink>
+          </button>
+          <hr />
+          <h3 style={{ textAlign: "center" }}>Help Improve Quizpedia</h3>
+          <p>Have some spare time or want to help? Quizpedia could use it!</p>
+          <button id="data-integrity-page" onClick={() => { window.alert("We appreciate it, but this feature isn't built yet!") }}>
+            Help Improve Quizpedia
+          </button>
+          <hr />
+          <p>
+            You're logged in as <strong>{cookies.auth.username}</strong>.
+          </p>
+          <button id="login-button" onClick={() => { removeCookie("auth"); window.location.reload() }}>
+            Log out
+          </button>
         </div>
       )
     } else {
@@ -404,7 +404,7 @@ export function QuizBowl() {
     <div className="main-holder">
       <div className="content-holder">
         <aside className="sidebar">
-          <div className="filter-box">
+          <div>
             <AccountStatus user={cookies.auth} filters={filters} />
           </div>
         </aside>
