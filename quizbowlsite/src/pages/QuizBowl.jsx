@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
+import { Document, Page, Text, View, StyleSheet, PDFViewer, PDFDownloadLink} from '@react-pdf/renderer';
 import { useCookies } from "react-cookie";
 import "../components/questioncard.css";
+import QuestionSheet from "../components/QuestionSheet.jsx";
 
 export function QuizBowl() {
   var [filters, setFilters] = useState({
@@ -89,6 +91,25 @@ export function QuizBowl() {
     }
   }
 
+  async function handleQuestionDownload() {
+    let event = prompt("Do you want to mark these questions as being used on today's date?\n\nClicking OK will mark the downloaded questions as having been last used on today's date. Clicking Cancel will not mark the questions as used, but will still download the questions to your computer.\n\nYou can optionally enter an event name for recordkeeping purposes, but this is not required.", "");
+
+    if (event != null) {
+      eventName = event.trim();
+      var questionIDs = randomQuestions.map((question) => question.id);
+
+      const response = await fetch(
+        "https://qzblapi.azurewebsites.net/api/LastUsage?uid=" + cookies.auth.uid + "&ids=" + encodeURIComponent(JSON.stringify(questionIDs)) + "&event=" + encodeURIComponent(event)
+      );
+      if (!response.ok) {
+        throw new Error("Failed to update lastUsage");
+      }
+      const data = await response.json();
+      
+      console.log(data);
+    }
+  }
+
   function AccountStatus({ user, filters }) {
     if (user != undefined && user.uid > 0) {
       return (
@@ -99,6 +120,7 @@ export function QuizBowl() {
           <button id="login-button" onClick={() => { removeCookie("auth"); window.location.reload() }}>
             Log out
           </button>
+          <hr />
           <h3 style={{ textAlign: "center" }}>Filters</h3>
           <p>
             Select checkboxes to enable/disable filters. Use drop down menus to
@@ -163,6 +185,19 @@ export function QuizBowl() {
           <button id="gen-questions" onClick={handleClick}>
             Generate Questions
           </button>
+          <button id="gen-pdf" className="pdfbutton" onClick={handleQuestionDownload}>
+              <PDFDownloadLink document={<QuestionSheet questions={randomQuestions} username={cookies.auth.username} datetime={new Date().toLocaleString()} />} fileName={"quizpedia-" + cookies.auth.username + "-" + new Date().toLocaleDateString()}  style={{
+                "fontFamily": "Exo, sans-serif", 
+                "fontSize": "16px", 
+                "backgroundColor": "white", 
+                "color": "black", 
+                "borderRadius": "5px",
+                "padding": "10px"}}>
+            {({ blob, url, loading, error }) => loading ? "Loading" : "Download PDF"}</PDFDownloadLink>
+            </button>
+            <hr />
+            <h3 style={{ textAlign: "center" }}>Help Improve Quizpedia</h3>
+            <p>Have some spare time or want to help? Quizpedia could use it! We mainly need help with reviewing the database of questions, as there are many little issues  </p>
         </div>
       )
     } else {
@@ -203,6 +238,12 @@ export function QuizBowl() {
           }
           if (data.questions[i].Level == null) {
             data.questions[i].Level = "N/A";
+          }
+          if (data.questions[i].lastusagedate == null) {
+            data.questions[i].lastusagedate = "N/A";
+          }
+          if (data.questions[i].lastusageevent == null) {
+            data.questions[i].lastusageevent = "N/A";
           }
         }
         setRandomQuestions(data.questions);
@@ -287,7 +328,7 @@ export function QuizBowl() {
             document.getElementById("topic").value = localStorage.topic;
           }
 
-        } else if (localStorage.questions && localStorage.lastuser) {
+        } else {
           localStorage.clear();
         }
       }
