@@ -123,13 +123,6 @@ export function QuizBowl() {
     if (user != undefined && user.uid > 0) {
       return (
         <div>
-          <p>
-            You're logged in as <strong>{cookies.auth.username}</strong>.
-          </p>
-          <button id="login-button" onClick={() => { removeCookie("auth"); window.location.reload() }}>
-            Log out
-          </button>
-          <hr />
           <h3 style={{ textAlign: "center" }}>Filters</h3>
           <p>
             Use drop down boxes and date selectors to enable or disable filters. Click the "Generate Questions" button to get a list of questions based on the filters you've selected, or click Download PDF in order to download a PDF of the currently shown questions.
@@ -215,14 +208,20 @@ export function QuizBowl() {
             <button id="data-integrity-page" onClick={() => { window.alert("We appreciate it, but this feature isn't built yet!") }}>
               Help Improve Quizpedia
             </button>
+            <hr />
+            <p>
+              You're logged in as <strong>{cookies.auth.username}</strong>.
+            </p>
+            <button id="login-button" onClick={() => { removeCookie("auth"); window.location.reload() }}>
+              Log out
+            </button>
         </div>
       )
     } else {
       return (
         <div>
-          <p>
-            You are not logged in. Please log in to view questions.
-          </p>
+          <h4>You're not logged in.</h4>
+          <p>Please log in to view questions and use the Quizpedia software.</p>
           <button id="login-button" onClick={() => { window.location.href="/login" }}>
             Login
           </button>
@@ -267,8 +266,8 @@ export function QuizBowl() {
             )}
           </div>
         ))}
-        {randomQuestions.length < 12 ? (
-          <p style={{"padding":"20px"}}>You are seeing fewer questions than you expect because not enough questions match your search filters. Try different or fewer filters.</p>
+        {(randomQuestions.length < 12 && cookies.auth != undefined) ? (
+          <p style={{"padding":"20px"}}>No questions are currently being displayed. This could be because you just signed in, or because no questions matched your filters. Try again with different or fewer filters enabled if this is the case.</p>
         ): ""}
       </div>
     )
@@ -406,12 +405,6 @@ export function QuizBowl() {
       <div className="content-holder">
         <aside className="sidebar">
           <div className="filter-box">
-            <h3 style={{ textAlign: "center" }}>Important Information</h3>
-            <p>
-              If this is the first time in a while that you are using this
-              website, it may take a long time to load initially. This is normal
-              and it should be faster afterwards.
-            </p>
             <AccountStatus user={cookies.auth} filters={filters} />
           </div>
         </aside>
