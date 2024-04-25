@@ -91,6 +91,23 @@ export function QuizBowl() {
     }
   }
 
+  async function handleQuestionDownload() {
+    let event = prompt("Do you want to mark these questions as being used on today's date?\n\nClicking OK will mark the downloaded questions as having been last used on today's date. Clicking Cancel will not mark the questions as used, but will still download the questions to your computer.\n\nYou can optionally enter an event name for recordkeeping purposes, but this is not required.", "");
+
+    if (event != null) {
+      var questionIDs = randomQuestions.map((question) => question.id);
+
+      const response = await fetch(
+        "https://qzblapi.azurewebsites.net/api/LastUsage?uid=" + cookies.auth.uid + "&ids=" + encodeURIComponent(JSON.stringify(questionIDs)) + "&event=" + encodeURIComponent(event)
+      );
+      if (!response.ok) {
+        throw new Error("Failed to update lastUsage");
+      }
+      const data = await response.json();
+      console.log(data);
+    }
+  }
+
   function AccountStatus({ user, filters }) {
     if (user != undefined && user.uid > 0) {
       return (
@@ -165,7 +182,7 @@ export function QuizBowl() {
           <button id="gen-questions" onClick={handleClick}>
             Generate Questions
           </button>
-          <button id="gen-pdf" className="pdfbutton">
+          <button id="gen-pdf" className="pdfbutton" onClick={handleQuestionDownload}>
               <PDFDownloadLink document={<QuestionSheet questions={randomQuestions} username={cookies.auth.username} datetime={new Date().toLocaleString()} />} fileName="questions.pdf"  style={{
                 "fontFamily": "Exo, sans-serif", 
                 "fontSize": "16px", 
