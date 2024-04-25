@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
+import { Document, Page, Text, View, StyleSheet, PDFViewer, PDFDownloadLink} from '@react-pdf/renderer';
 import { useCookies } from "react-cookie";
 import "../components/questioncard.css";
+import QuestionSheet from "../components/QuestionSheet.jsx";
 
 export function QuizBowl() {
   var [filters, setFilters] = useState({
@@ -163,6 +165,16 @@ export function QuizBowl() {
           <button id="gen-questions" onClick={handleClick}>
             Generate Questions
           </button>
+          <button id="gen-pdf" className="pdfbutton">
+              <PDFDownloadLink document={<QuestionSheet questions={randomQuestions} username={cookies.auth.username} datetime={new Date().toLocaleString()} />} fileName="questions.pdf"  style={{
+                "fontFamily": "Exo, sans-serif", 
+                "fontSize": "16px", 
+                "backgroundColor": "white", 
+                "color": "black", 
+                "borderRadius": "5px",
+                "padding": "10px"}}>
+            {({ blob, url, loading, error }) => loading ? "Download PDF" : "Download PDF"}</PDFDownloadLink>
+            </button>
         </div>
       )
     } else {
@@ -287,7 +299,7 @@ export function QuizBowl() {
             document.getElementById("topic").value = localStorage.topic;
           }
 
-        } else if (localStorage.questions && localStorage.lastuser) {
+        } else {
           localStorage.clear();
         }
       }
