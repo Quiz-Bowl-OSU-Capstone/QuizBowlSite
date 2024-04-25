@@ -212,7 +212,7 @@ export function QuizBowl() {
             <hr />
             <h3 style={{ textAlign: "center" }}>Help Improve Quizpedia</h3>
             <p>Have some spare time or want to help? Quizpedia could use it!</p>
-            <button id="data-integrity-page" >
+            <button id="data-integrity-page" onClick={() => { window.alert("We appreciate it, but this feature isn't built yet!") }}>
               Help Improve Quizpedia
             </button>
         </div>
