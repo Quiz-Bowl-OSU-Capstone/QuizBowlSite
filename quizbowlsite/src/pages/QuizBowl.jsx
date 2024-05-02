@@ -21,6 +21,45 @@ export function QuizBowl() {
   const [resourceFilter, setResourceFilter] = useState('nofilter');
   const [topicFilter, setTopicFilter] = useState('nofilter');
 
+  async function fetchSingleQuestion() {
+    var params = "?uid=" + cookies.auth.uid;
+
+    if (localStorage.getItem("level")) {
+      params += "&level=" + localStorage.getItem("level");
+    }
+
+    if (localStorage.getItem("species")) {
+      params += "&species=" + localStorage.getItem("species");
+    }
+
+    if (localStorage.getItem("resource")) {
+      params += "&resource=" + localStorage.getItem("resource");
+    }
+
+    if (localStorage.getItem("topic")) {
+      params += "&topic=" + localStorage.getItem("topic");
+    }
+
+    params += "&amt=1";
+
+    try {
+      const response = await fetch(
+        "https://qzblapi.azurewebsites.net/api/PickRandomQuestions" + params
+      );
+      if (!response.ok) {
+        throw new Error("Failed to fetch filters");
+      }
+      const data = await response.json();
+      if (data.questions.length > 0) {
+        return data.questions[0];
+      } else {
+        return null;
+      }
+    } catch (e) {
+      console.log("Error replacing question: " + e)
+    }
+  }
+
   async function handleClick() {
     var params = "";
 
@@ -85,18 +124,46 @@ export function QuizBowl() {
     // Edit
   }
 
-  function handleReplaceClick() {
+  function handleReplaceClick(qid) {
     if (window.confirm("By clicking OK, you are going to replace this question with a new randomly-selected question from the database. Are you sure?")) {
-      console.log("Confirmed replace operation.");
-      // Put code here to replace that question.
+      console.log("Confirmed replace operation with ID" + qid);
+
+      fetchSingleQuestion().then((newQuestion) => {
+        if (newQuestion != null) {
+          var questions = randomQuestions.filter((question) => question.id != qid);
+          questions = questions.concat(newQuestion);
+          console.log(questions);
+          
+          setRandomQuestions(questions);
+          localStorage.setItem("questions", JSON.stringify(questions));
+          localStorage.setItem("lastuser", cookies.auth.uid);
+          localStorage.setItem("lastfetched", new Date().getTime() / 1000);
+        } else {
+          window.alert("Failed to replace question. This could be because there are not enough questions in the database with similar filters, or because of a network error.")
+        }
+      });
     }
   }
 
   // Function to handle delete button click
-  function handleDeleteClick() {
+  function handleDeleteClick(qid) {
     if (window.confirm("By clicking OK, you are going to permanently delete this question from both this list and the database. Are you sure?")) {
-      console.log("Confirmed delete operation.");
-      // Put code here to delete that question.
+      console.log("Confirmed delete operation with ID" + qid);
+
+      fetchSingleQuestion().then((newQuestion) => {
+        if (newQuestion != null) {
+          var questions = randomQuestions.filter((question) => question.id != qid);
+          questions = questions.concat(newQuestion);
+          console.log(questions);
+          
+          setRandomQuestions(questions);
+          localStorage.setItem("questions", JSON.stringify(questions));
+          localStorage.setItem("lastuser", cookies.auth.uid);
+          localStorage.setItem("lastfetched", new Date().getTime() / 1000);
+        } else {
+          window.alert("Failed to replace question. This could be because there are not enough questions in the database with similar filters, or because of a network error.")
+        }
+      });
     }
   }
 
@@ -256,17 +323,21 @@ export function QuizBowl() {
                 </p>
                 <div>
                   {/* Edit button */}
-                  <button className="action-buttons" onClick={() => { handleEditClick() }}>Edit</button>
+                  <button className="action-buttons" onClick={() => { handleEditClick() }} title="Edit this question. Changes are saved to the database.">Edit</button>
                   {/* Remove button */}
-                  <button className="action-buttons" onClick={() => { handleReplaceClick() }}>Replace</button>
+                  {(randomQuestions.length < 12) ? (
+                    <button className="action-buttons" disabled={true} title="This button is disabled because there are no other questions in the database to replace this question with.">Replace</button>
+                  ): (
+                    <button className="action-buttons" onClick={() => { handleReplaceClick(question.id) }} title="Replace this question with a new randomly picked one.">Replace</button>
+                  )}
                   {/* Delete button */}
-                  <button className="buttons-dark" onClick={() => { handleDeleteClick() }}>Delete</button>
+                  <button className="buttons-dark" onClick={() => { handleDeleteClick(question.id) }} title="Delete this question from the database and replace it with a new randomly picked one.">Delete</button>
                 </div>
               </div>
             )}
           </div>
         ))}
-        {(randomQuestions.length < 12 && cookies.auth != undefined) ? (
+        {(randomQuestions.length == 0 && cookies.auth != undefined) ? (
           <p style={{"padding":"20px"}}>No questions are currently being displayed. This could be because you just signed in, or because no questions matched your filters. Try again with different or fewer filters enabled if this is the case.</p>
         ): ""}
       </div>
@@ -276,10 +347,8 @@ export function QuizBowl() {
   async function fetchRandomQuestions(params) {
     try {
       document.getElementById("gen-questions").setAttribute("disabled", "true");
-      const response = await fetch(
-        "https://qzblapi.azurewebsites.net/api/PickRandomQuestions" +
-          params
-      );
+      var fullURL = "https://qzblapi.azurewebsites.net/api/PickRandomQuestions" + params;
+      const response = await fetch(fullURL);
       if (!response.ok) {
         throw new Error("Failed to fetch random questions");
       }
@@ -309,6 +378,7 @@ export function QuizBowl() {
             data.questions[i].lastusageevent = "N/A";
           }
         }
+
         setRandomQuestions(data.questions);
         localStorage.setItem("questions", JSON.stringify(data.questions));
         localStorage.setItem("lastuser", cookies.auth.uid);
