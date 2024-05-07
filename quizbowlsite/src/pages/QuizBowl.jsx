@@ -45,7 +45,6 @@ export function QuizBowl() {
     var ids=[];
     randomQuestions.forEach((question) => { ids.push(question.id) });
     params += "&exclude=" + encodeURIComponent(JSON.stringify(ids));
-    console.log(params);
 
     try {
       const response = await fetch(
@@ -156,19 +155,22 @@ export function QuizBowl() {
     if (window.confirm("By clicking OK, you are going to permanently delete this question from both this list and the database. Are you sure?")) {
       console.log("Confirmed delete operation with ID" + qid);
 
+      document.getElementById("q-operation-loading").style.display = "flex";
       fetchSingleQuestion().then((newQuestion) => {
+        var deleteURL = "https://qzblapi.azurewebsites.net/api/RemoveQuestions?uid=" + cookies.auth.uid + "&ids=" + encodeURIComponent(JSON.stringify([qid]));
+        var questions = randomQuestions.filter((question) => question.id != qid);
+        console.log(deleteURL);
+        
         if (newQuestion != null) {
-          var questions = randomQuestions.filter((question) => question.id != qid);
           questions = questions.concat(newQuestion);
-          console.log(questions);
-          
-          setRandomQuestions(questions);
-          localStorage.setItem("questions", JSON.stringify(questions));
-          localStorage.setItem("lastuser", cookies.auth.uid);
-          localStorage.setItem("lastfetched", new Date().getTime() / 1000);
         } else {
-          window.alert("Failed to replace question. This could be because there are not enough questions in the database with similar filters, or because of a network error.")
+          window.alert("Failed to replace question. This could be because there are not enough questions in the database with similar filters, or because of a network error.")  
         }
+
+        setRandomQuestions(questions);
+        localStorage.setItem("questions", JSON.stringify(questions));
+        localStorage.setItem("lastuser", cookies.auth.uid);
+        localStorage.setItem("lastfetched", new Date().getTime() / 1000);
       });
     }
   }
@@ -446,25 +448,21 @@ export function QuizBowl() {
 
           if (localStorage.level) {
             console.log("Setting level to", localStorage.level);
-            document.getElementById("level-enabled").checked = true;
             document.getElementById("level").value = localStorage.level;
           }
 
           if (localStorage.species) {
             console.log("Setting species to", localStorage.species);
-            document.getElementById("species-enabled").checked = true;
             document.getElementById("species").value = localStorage.species;
           }
 
           if (localStorage.resource) {
             console.log("Setting resource to", localStorage.resource);
-            document.getElementById("resource-enabled").checked = true;
             document.getElementById("resource").value = localStorage.resource;
           }
 
           if (localStorage.topic) {
             console.log("Setting topic to", localStorage.topic);
-            document.getElementById("topic-enabled").checked = true;
             document.getElementById("topic").value = localStorage.topic;
           }
 
