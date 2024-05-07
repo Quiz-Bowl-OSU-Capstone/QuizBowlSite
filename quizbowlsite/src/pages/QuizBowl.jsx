@@ -64,6 +64,15 @@ export function QuizBowl() {
     }
   }
 
+  async function deleteQuestion(qid) {
+    var deleteURL = "https://qzblapi.azurewebsites.net/api/RemoveQuestions?uid=" + cookies.auth.uid + "&ids=" + encodeURIComponent(JSON.stringify([qid]));
+    const response = await fetch(deleteURL);
+    if (!response.ok) {
+      throw new Error("Failed to update lastUsage");
+    }
+    data = await response.json();
+  }
+
   async function handleClick() {
     var params = "";
 
@@ -157,9 +166,7 @@ export function QuizBowl() {
 
       document.getElementById("q-operation-loading").style.display = "flex";
       fetchSingleQuestion().then((newQuestion) => {
-        var deleteURL = "https://qzblapi.azurewebsites.net/api/RemoveQuestions?uid=" + cookies.auth.uid + "&ids=" + encodeURIComponent(JSON.stringify([qid]));
         var questions = randomQuestions.filter((question) => question.id != qid);
-        console.log(deleteURL);
         
         if (newQuestion != null) {
           questions = questions.concat(newQuestion);
@@ -172,6 +179,8 @@ export function QuizBowl() {
         localStorage.setItem("lastuser", cookies.auth.uid);
         localStorage.setItem("lastfetched", new Date().getTime() / 1000);
       });
+
+      deleteQuestion(qid);
     }
   }
 
