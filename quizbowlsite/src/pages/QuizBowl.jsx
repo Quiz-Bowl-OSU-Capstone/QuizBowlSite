@@ -128,11 +128,11 @@ export function QuizBowl() {
     if (window.confirm("By clicking OK, you are going to replace this question with a new randomly-selected question from the database. Are you sure?")) {
       console.log("Confirmed replace operation with ID" + qid);
 
+      document.getElementById("q-operation-loading").style.display = "flex";
       fetchSingleQuestion().then((newQuestion) => {
         if (newQuestion != null) {
           var questions = randomQuestions.filter((question) => question.id != qid);
           questions = questions.concat(newQuestion);
-          console.log(questions);
           
           setRandomQuestions(questions);
           localStorage.setItem("questions", JSON.stringify(questions));
@@ -140,6 +140,7 @@ export function QuizBowl() {
           localStorage.setItem("lastfetched", new Date().getTime() / 1000);
         } else {
           window.alert("Failed to replace question. This could be because there are not enough questions in the database with similar filters, or because of a network error.")
+          document.getElementById("q-operation-loading").style.display = "none";
         }
       });
     }
@@ -321,6 +322,7 @@ export function QuizBowl() {
                   Resource: {question.Resource} | ID: {question.id}<br />
                   Last Used: {question.lastusagedate} | Last Event Used At: {question.lastusageevent}
                 </p>
+                <img src="loading.gif" alt="Loading..." id="q-operation-loading" className="loading-symbol" />
                 <div>
                   {/* Edit button */}
                   <button className="action-buttons" onClick={() => { handleEditClick() }} title="Edit this question. Changes are saved to the database.">Edit</button>

@@ -121,12 +121,12 @@ a.active {
 }
 
 .loading-symbol {
-  margin: auto;
-  display: flex;
+  margin-left: auto;
+  margin-right: auto;
   margin-top: 20px;
-  margin-bottom: 10px;
-  height: 50px;
+  margin-bottom: 20px;
   display: none;
+  height: 50px;
 }
 
 .sidebar ul {
