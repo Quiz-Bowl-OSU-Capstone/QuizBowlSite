@@ -42,6 +42,11 @@ export function QuizBowl() {
 
     params += "&amt=1";
 
+    var ids=[];
+    randomQuestions.forEach((question) => { ids.push(question.id) });
+    params += "&exclude=" + encodeURIComponent(JSON.stringify(ids));
+    console.log(params);
+
     try {
       const response = await fetch(
         "https://qzblapi.azurewebsites.net/api/PickRandomQuestions" + params
@@ -172,11 +177,11 @@ export function QuizBowl() {
     let event = prompt("Do you want to mark these questions as being used on today's date?\n\nClicking OK will mark the downloaded questions as having been last used on today's date. Clicking Cancel will not mark the questions as used, but will still download the questions to your computer.\n\nYou can optionally enter an event name for recordkeeping purposes, but this is not required.", "");
 
     if (event != null) {
-      eventName = event.trim();
+      var eventName = event.trim();
       var questionIDs = randomQuestions.map((question) => question.id);
 
       const response = await fetch(
-        "https://qzblapi.azurewebsites.net/api/LastUsage?uid=" + cookies.auth.uid + "&ids=" + encodeURIComponent(JSON.stringify(questionIDs)) + "&event=" + encodeURIComponent(event)
+        "https://qzblapi.azurewebsites.net/api/LastUsage?uid=" + cookies.auth.uid + "&ids=" + encodeURIComponent(JSON.stringify(questionIDs)) + "&event=" + encodeURIComponent(eventName)
       );
       if (!response.ok) {
         throw new Error("Failed to update lastUsage");
