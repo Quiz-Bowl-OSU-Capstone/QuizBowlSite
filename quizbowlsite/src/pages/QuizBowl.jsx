@@ -457,22 +457,22 @@ export function QuizBowl() {
 
           if (localStorage.level) {
             console.log("Setting level to", localStorage.level);
-            document.getElementById("level").value = localStorage.level;
+            setLevelFilter(localStorage.level);
           }
 
           if (localStorage.species) {
             console.log("Setting species to", localStorage.species);
-            document.getElementById("species").value = localStorage.species;
+            setSpeciesFilter(localStorage.species);
           }
 
           if (localStorage.resource) {
             console.log("Setting resource to", localStorage.resource);
-            document.getElementById("resource").value = localStorage.resource;
+            setResourceFilter(localStorage.resource);
           }
 
           if (localStorage.topic) {
             console.log("Setting topic to", localStorage.topic);
-            document.getElementById("topic").value = localStorage.topic;
+            setTopicFilter(localStorage.topic);
           }
 
         } else {
