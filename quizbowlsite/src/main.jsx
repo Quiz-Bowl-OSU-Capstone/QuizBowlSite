@@ -6,6 +6,7 @@ import { About } from "./pages/About";
 import { Contact } from "./pages/Contact";
 import { Help } from "./pages/Help";
 import { Login } from "./pages/Login";
+import { MissingInfo } from "./pages/MissingInfo";
 import App from "./Home";
 import "./index.css";
 import { ErrorPage } from "./Home";
@@ -25,7 +26,7 @@ const router = createBrowserRouter([
       { path: "login", element: <Login /> },
       { path: "contact", element: <Contact /> },
       { path: "help", element: <Help /> },
-      
+      { path: "missinginfo", element: <MissingInfo />}
     ],
   },
 ]);
