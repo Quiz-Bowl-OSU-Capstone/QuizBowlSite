@@ -1,21 +1,111 @@
 import React, { useState, useEffect } from "react";
-import { Document, Page, Text, View, StyleSheet, PDFViewer, PDFDownloadLink} from '@react-pdf/renderer';
+import { Document, Page, Text, View, StyleSheet, PDFViewer, PDFDownloadLink } from '@react-pdf/renderer';
 import { useCookies } from "react-cookie";
 import "../components/questioncard.css";
 import QuestionSheet from "../components/QuestionSheet.jsx";
 
+// Dedicated component to edit a single question
+function EditQuestionForm({ question, onSave, onCancel }) {
+  const [editingQuestion, setEditingQuestion] = useState({ ...question });
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setEditingQuestion((prev) => ({ ...prev, [name]: value }));
+  };
+
+  return (
+    <div className="edit-form" onClick={(e) => e.stopPropagation()}>
+      <p>ID: {editingQuestion.id}</p>
+      <label>
+        Question:
+        <input
+          type="text"
+          name="Question"
+          value={editingQuestion.Question}
+          onChange={handleInputChange}
+          autoFocus
+        />
+      </label>
+      <label>
+        Answer:
+        <input
+          type="text"
+          name="Answer"
+          value={editingQuestion.Answer}
+          onChange={handleInputChange}
+        />
+      </label>
+      <label>
+        Level:
+        <input
+          type="text"
+          name="Level"
+          value={editingQuestion.Level}
+          onChange={handleInputChange}
+        />
+      </label>
+      <label>
+        Species:
+        <input
+          type="text"
+          name="Species"
+          value={editingQuestion.Species}
+          onChange={handleInputChange}
+        />
+      </label>
+      <label>
+        Topic:
+        <input
+          type="text"
+          name="Topic"
+          value={editingQuestion.Topic}
+          onChange={handleInputChange}
+        />
+      </label>
+      <label>
+        Resource:
+        <input
+          type="text"
+          name="Resource"
+          value={editingQuestion.Resource}
+          onChange={handleInputChange}
+        />
+      </label>
+      <label>
+        Last Used:
+        <input
+          type="text"
+          name="lastusagedate"
+          value={editingQuestion.lastusagedate}
+          onChange={handleInputChange}
+        />
+      </label>
+      <label>
+        Last Event Used At:
+        <input
+          type="text"
+          name="lastusageevent"
+          value={editingQuestion.lastusageevent}
+          onChange={handleInputChange}
+        />
+      </label>
+      <button className="action-buttons" onClick={() => onSave(editingQuestion)}>Save</button>
+      <button className="action-buttons" onClick={onCancel}>Cancel</button>
+    </div>
+  );
+}
+
 export function QuizBowl() {
-  var [filters, setFilters] = useState({
+  const [filters, setFilters] = useState({
     species: ["Loading..."],
     resource: ["Loading..."],
     level: ["Loading..."],
     topic: ["Loading..."],
   });
   const [cookies, setCookie, removeCookie] = useCookies(["user"]);
-
   const [randomQuestions, setRandomQuestions] = useState([]);
   const [selectedQuestion, setSelectedQuestion] = useState(null);
-
+  const [editingQuestionId, setEditingQuestionId] = useState(null);
   const [levelFilter, setLevelFilter] = useState('nofilter');
   const [speciesFilter, setSpeciesFilter] = useState('nofilter');
   const [resourceFilter, setResourceFilter] = useState('nofilter');
@@ -30,28 +120,28 @@ export function QuizBowl() {
       params += "?uid=0";
     }
 
-    if (levelFilter != "nofilter") {
+    if (levelFilter !== "nofilter") {
       params += "&level=" + levelFilter;
       localStorage.setItem("level", levelFilter);
     } else {
       localStorage.removeItem("level");
     }
 
-    if (speciesFilter != "nofilter") {
+    if (speciesFilter !== "nofilter") {
       params += "&species=" + speciesFilter;
       localStorage.setItem("species", speciesFilter);
     } else {
       localStorage.removeItem("species");
     }
 
-    if (resourceFilter != "nofilter") {
+    if (resourceFilter !== "nofilter") {
       params += "&resource=" + resourceFilter;
       localStorage.setItem("resource", resourceFilter);
     } else {
       localStorage.removeItem("resource");
     }
 
-    if (topicFilter != "nofilter") {
+    if (topicFilter !== "nofilter") {
       params += "&topic=" + topicFilter;
       localStorage.setItem("topic", topicFilter);
     } else {
@@ -66,23 +156,23 @@ export function QuizBowl() {
     }
 
     console.log("Params: ", params);
-
     fetchRandomQuestions(params);
   }
 
   function handleQuestionClick(question) {
-    setSelectedQuestion((prevQuestion) => {
-      if (prevQuestion && prevQuestion.id === question.id) {
-        return null;
-      } else {
-        return question;
-      }
-    });
+    if (editingQuestionId) {
+      return; // Ignore clicks on questions when editing
+    }
+    setSelectedQuestion((prevQuestion) => (prevQuestion && prevQuestion.id === question.id ? null : question));
   }
 
-  // Function to handle edit button click
-  function handleEditClick() {
-    // Edit
+  function handleEditClick(question) {
+    setEditingQuestionId(question.id);
+  }
+
+  function handleSaveClick(updatedQuestion) {
+    setRandomQuestions(randomQuestions.map(q => (q.id === updatedQuestion.id ? updatedQuestion : q)));
+    setEditingQuestionId(null);
   }
 
   function handleReplaceClick() {
@@ -92,7 +182,6 @@ export function QuizBowl() {
     }
   }
 
-  // Function to handle delete button click
   function handleDeleteClick() {
     if (window.confirm("By clicking OK, you are going to permanently delete this question from both this list and the database. Are you sure?")) {
       console.log("Confirmed delete operation.");
@@ -104,7 +193,7 @@ export function QuizBowl() {
     let event = prompt("Do you want to mark these questions as being used on today's date?\n\nClicking OK will mark the downloaded questions as having been last used on today's date. Clicking Cancel will not mark the questions as used, but will still download the questions to your computer.\n\nYou can optionally enter an event name for recordkeeping purposes, but this is not required.", "");
 
     if (event != null) {
-      eventName = event.trim();
+      event = event.trim();
       var questionIDs = randomQuestions.map((question) => question.id);
 
       const response = await fetch(
@@ -139,7 +228,7 @@ export function QuizBowl() {
                         {level}
                       </option>
                     ))}
-                </select>
+                  </select>
                 </label>
               </li>
               <li>
@@ -230,7 +319,7 @@ export function QuizBowl() {
     }
   }
 
-  function QuestionDisplay({}) {
+  function QuestionDisplay() {
     return (
       <div className="question-holder">
         {randomQuestions.map((question, index) => (
@@ -239,30 +328,36 @@ export function QuizBowl() {
             className="question-card"
             onClick={() => handleQuestionClick(question)}
           >
-            <p>
-              <strong>{question.Question}</strong>
-              <br />
-              Answer: {question.Answer}
-              <br />
-              <i>Level: {question.Level} | Species: {question.Species} | Topic:{" "}
-                  {question.Topic}</i>
-            </p>
-            {/* Additional information that is shown when a card is clicked */}
-            {selectedQuestion && selectedQuestion.id === question.id && (
-              <div className="question-info-holder">
+            {editingQuestionId === question.id ? (
+              <EditQuestionForm
+                question={question}
+                onSave={handleSaveClick}
+                onCancel={() => setEditingQuestionId(null)}
+              />
+            ) : (
+              <>
                 <p>
-                  Resource: {question.Resource} | ID: {question.id}<br />
-                  Last Used: {question.lastusagedate} | Last Event Used At: {question.lastusageevent}
+                  <strong>{question.Question}</strong>
+                  <br />
+                  Answer: {question.Answer}
+                  <br />
+                  <i>Level: {question.Level} | Species: {question.Species} | Topic:{" "}
+                      {question.Topic}</i>
                 </p>
-                <div>
-                  {/* Edit button */}
-                  <button className="action-buttons" onClick={() => { handleEditClick() }}>Edit</button>
-                  {/* Remove button */}
-                  <button className="action-buttons" onClick={() => { handleReplaceClick() }}>Replace</button>
-                  {/* Delete button */}
-                  <button className="buttons-dark" onClick={() => { handleDeleteClick() }}>Delete</button>
-                </div>
-              </div>
+                {selectedQuestion && selectedQuestion.id === question.id && (
+                  <div className="question-info-holder">
+                    <p>
+                      Resource: {question.Resource} | ID: {question.id}<br />
+                      Last Used: {question.lastusagedate} | Last Event Used At: {question.lastusageevent}
+                    </p>
+                    <div>
+                      <button className="action-buttons" onClick={() => handleEditClick(question)}>Edit</button>
+                      <button className="action-buttons" onClick={handleReplaceClick}>Replace</button>
+                      <button className="buttons-dark" onClick={handleDeleteClick}>Delete</button>
+                    </div>
+                  </div>
+                )}
+              </>
             )}
           </div>
         ))}
@@ -369,25 +464,21 @@ export function QuizBowl() {
 
           if (localStorage.level) {
             console.log("Setting level to", localStorage.level);
-            document.getElementById("level-enabled").checked = true;
             document.getElementById("level").value = localStorage.level;
           }
 
           if (localStorage.species) {
             console.log("Setting species to", localStorage.species);
-            document.getElementById("species-enabled").checked = true;
             document.getElementById("species").value = localStorage.species;
           }
 
           if (localStorage.resource) {
             console.log("Setting resource to", localStorage.resource);
-            document.getElementById("resource-enabled").checked = true;
             document.getElementById("resource").value = localStorage.resource;
           }
 
           if (localStorage.topic) {
             console.log("Setting topic to", localStorage.topic);
-            document.getElementById("topic-enabled").checked = true;
             document.getElementById("topic").value = localStorage.topic;
           }
 
