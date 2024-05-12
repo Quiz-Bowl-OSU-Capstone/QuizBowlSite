@@ -1,22 +1,19 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from "react";
 import { useCookies } from "react-cookie";
 
 export function DuplicateDetect() { 
     const [randomQuestions, setRandomQuestions] = React.useState([]);
     const [cookies, setCookie, removeCookie] = useCookies(["user"]);
+    const [autocompleteRender, setAutoCompletedRender] = React.useState(false);
 
-    const [newQuestion, setNewQuestion] = React.useState([
-        {
-            Question: "",
-            Answer: "",
-            Level: "",
-            Species: "",
-            Topic: "",
-            Resource: "",
-            lastusagedate: "",
-            lastusageevent: ""
-        }
-    ]);
+    const newQuestion = React.useRef(null);
+    const newAnswer = React.useRef(null);
+    const newLevel = React.useRef(null);
+    const newSpecies = React.useRef(null);
+    const newTopic = React.useRef(null);
+    const newResource = React.useRef(null);
+    const newLastUsedDate = React.useRef(null);
+    const newLastUsedEvent = React.useRef(null);
 
     async function fetchQuestions() {
         try {
@@ -60,8 +57,6 @@ export function DuplicateDetect() {
                   setRandomQuestions(data.endingQuestions);
                   document.getElementById("duplicate-loading").style.display = "none";
                   document.getElementById("fetch-duplicates").removeAttribute("disabled");
-
-                  autocomplete();
             } else {    
                 console.log("No questions found.");
                 document.getElementById("duplicate-loading").style.display = "none";
@@ -75,23 +70,9 @@ export function DuplicateDetect() {
     }
 
     function autocomplete() {
-        if (randomQuestions.length > 0) {
-            setNewQuestion({
-                Question: randomQuestions[0].Question,
-                Answer: randomQuestions[0].Answer
-            });
-        } else {
-            setNewQuestion({
-                Question: "",
-                Answer: "",
-                Level: "",
-                Species: "",
-                Topic: "",
-                Resource: "",
-                lastusagedate: "",
-                lastusageevent: ""
-            });
-        }
+        console.log("Attempting to auto-fill fields.");
+        newQuestion.current.value = "test";
+        newAnswer.current.value = "test";
     }
     
     function QuestionDisplay({}) {
@@ -126,14 +107,6 @@ export function DuplicateDetect() {
         )
     }
 
-    const handleEvent = (event) => {
-        console.log(event.target.id + " - " + event.target.value);
-
-        setNewQuestion({
-            Question: newQuestion.Question
-        })
-    }
-
     function FlagDuplicates({ user }) {
         if (user != undefined && user.uid > 0) {
             return (
@@ -153,18 +126,18 @@ export function DuplicateDetect() {
 
                         <div className="question-card" >
                             <div className="col-1">
-                                <input type="text" key="new-question" className="select-box" placeholder="Question" onChange={event => handleEvent(event)}/>
-                                <input type="text" key="new-answer" className="select-box" placeholder="Answer" onChange={event => handleEvent(event)}/>
+                                <input type="text" id="new-question" className="select-box" placeholder="Question" ref={newQuestion}/>
+                                <input type="text" id="new-answer" className="select-box" placeholder="Answer" ref={newAnswer}/>
                             </div>
                             <div className="col-2">
-                                <input type="text" id="new-level" className="select-box" placeholder="Level" value={newQuestion.Level} onChange={event => handleEvent(event)}/>
-                                <input type="text" id="new-species" className="select-box" placeholder="Species"  value={newQuestion.Species} onChange={event => handleEvent(event)}/>
-                                <input type="text" id="new-topic" className="select-box" placeholder="Topic"  value={newQuestion.Topic} onChange={event => handleEvent(event)}/>
+                                <input type="text" id="new_level" className="select-box" placeholder="Level" ref={newLevel}/>
+                                <input type="text" id="new-species" className="select-box" placeholder="Species"  ref={newSpecies}/>
+                                <input type="text" id="new-topic" className="select-box" placeholder="Topic" ref={newTopic}/>
                             </div>
                             <div className="question-info-holder">
-                                <input type="text" key="new-resource" className="select-box" placeholder="Resource" value={newQuestion.Resource} onChange={event => handleEvent(event)}/>
-                                <input type="date" key="new-last-used-date" className="select-box" onChange={event => handleEvent(event)}/>
-                                <input type="text" key="new-last-used-event" className="select-box" placeholder="Last Event Used At"  value={newQuestion.lastusageevent} onChange={event => handleEvent(event)}/>
+                                <input type="text" id="new-resource" className="select-box" placeholder="Resource" ref={newResource}/>
+                                <input type="date" id="new-last-used-date" className="select-box" ref={newLastUsedDate}/>
+                                <input type="text" id="new-last-used-event" className="select-box" placeholder="Last Event Used At" ref={newLastUsedEvent}/>
                             </div>
                         </div>
 
