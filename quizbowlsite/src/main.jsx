@@ -10,6 +10,7 @@ import App from "./Home";
 
 import "./index.css";
 import { ErrorPage } from "./Home";
+import { DuplicateDetect } from "./pages/DuplicateDetect";
 
 const router = createBrowserRouter([
   {
@@ -26,6 +27,7 @@ const router = createBrowserRouter([
       { path: "login", element: <Login /> },
       { path: "contact", element: <Contact /> },
       { path: "help", element: <Help /> },
+      { path: "duplicates", element: <DuplicateDetect /> },
     ],
   },
 ]);
