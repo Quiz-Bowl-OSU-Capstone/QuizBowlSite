@@ -135,15 +135,13 @@ a.active {
 }
 
 .sidebar a {
-  display: block;
   text-decoration: none;
-  color: black;
-  font-size: 18px;
-  padding: 5px 10px;
+  cursor: default;
+  color: rgb(245, 83, 29)
 }
 
 .sidebar a:hover {
-  background-color: #ccc;
+  color: white;
 }
 
 .filter-box {

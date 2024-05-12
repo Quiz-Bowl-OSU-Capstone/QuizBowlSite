@@ -190,7 +190,7 @@ export function QuizBowl() {
     if (user != undefined && user.uid > 0) {
       return (
         <div>
-          <h3 style={{ textAlign: "center" }}>Filters</h3>
+          <h3 style={{ textAlign: "center" }}>Instructions</h3>
           <p>
             Use drop down boxes and date selectors to enable or disable filters.
             Click the "Generate Questions" button to get a list of questions
@@ -283,6 +283,9 @@ export function QuizBowl() {
               </li>
             </ul>
           </form>
+          <button id="clear-questions">
+            Clear
+          </button>
           <button id="gen-questions" onClick={handleClick}>
             Generate Questions
           </button>
@@ -314,15 +317,14 @@ export function QuizBowl() {
                 padding: "10px",
               }}
             >
-              Download PDF
+              Download as PDF
             </PDFDownloadLink>
           </button>
           <button id="gen-csv" onClick={handleDownloadCSV}>
-            Download CSV
+            Download as CSV
           </button>
           <hr />
-          <h3 style={{ textAlign: "center" }}>Help Improve Quizpedia</h3>
-          <p>Have some spare time or want to help? Quizpedia could use it!</p>
+          <h3 style={{ textAlign: "center" }}>More Options</h3>
           <button
             id="data-integrity-page"
             onClick={() => {
@@ -331,8 +333,22 @@ export function QuizBowl() {
               );
             }}
           >
-            Help Improve Quizpedia
+            Fill In Missing Data
           </button>
+          <button
+            id="data-integrity-page"
+            onClick={() => {
+              window.alert(
+                "We appreciate it, but this feature isn't built yet!"
+              );
+            }}
+          >
+            Flag Duplicate Questions
+          </button>
+          <button id="csv-import">
+            Import Questions from CSV
+          </button>
+          <p>Note: Questions must be in the correct format to be imported with a CSV file. <a className="silentlink" href="/quizpedia-template.csv">Click here to download a CSV template</a>.</p>
           <hr />
           <p>
             You're logged in as <strong>{cookies.auth.username}</strong>.
