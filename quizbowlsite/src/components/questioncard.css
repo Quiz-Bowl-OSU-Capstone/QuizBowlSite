@@ -17,6 +17,12 @@
   text-align: left;
 }
 
+.question-card label {
+  text-align: center;
+  justify-self: center;
+  padding: 20px;
+}
+
 .content-container {
   display: flex;
   justify-content: center;
@@ -64,4 +70,3 @@
 .buttons-dark:hover {
   background-color: rgb(215, 63, 9);
 }
-

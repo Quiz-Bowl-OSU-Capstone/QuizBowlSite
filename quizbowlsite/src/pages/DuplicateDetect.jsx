@@ -24,7 +24,6 @@ export function DuplicateDetect() {
                 throw new Error("Failed to fetch filters");
             }
             const data = await response.json();
-            console.log(data.endingQuestions[0]);
 
             if (data.endingQuestions.length > 0) {
                 for (var i = 0; i < data.endingQuestions.length; i++) {
@@ -54,9 +53,13 @@ export function DuplicateDetect() {
                     }
                   }
           
-                  setRandomQuestions(data.endingQuestions);
+                  setRandomQuestions(data.endingQuestions)
+
                   document.getElementById("duplicate-loading").style.display = "none";
                   document.getElementById("fetch-duplicates").removeAttribute("disabled");
+
+                  setTimeout(() => { autocomplete(data.endingQuestions); }, 500);
+
             } else {    
                 console.log("No questions found.");
                 document.getElementById("duplicate-loading").style.display = "none";
@@ -69,10 +72,130 @@ export function DuplicateDetect() {
         }
     }
 
-    function autocomplete() {
+    function autocomplete(questions) {
         console.log("Attempting to auto-fill fields.");
-        newQuestion.current.value = "test";
-        newAnswer.current.value = "test";
+
+        var question = "";
+        var answer = "";
+
+        var level = "";
+        var topic = "";
+        var species = "";
+        var resource = "";
+        var lastuseddate  = "";
+        var lastusageevent = "";
+
+        for (var i = 0; i < questions.length; i++) {
+            if (questions[i].Question != "N/A" && questions[i].Question != "") {
+                if (question != questions[i].Question && question != "") {
+                    question = "-"
+                } else {
+                    question = questions[i].Question;
+                }
+            }
+
+            if (questions[i].Answer != "N/A" && questions[i].Answer != "") {
+                if (answer != questions[i].Answer && answer != "") {
+                    answer = "-"
+                } else {
+                    answer = questions[i].Answer;
+                }
+            }
+
+            if (questions[i].Level != "N/A" && questions[i].Level != "") {
+                if (level != questions[i].Level && level != "") {
+                    level = "-"
+                } else {
+                    level = questions[i].Level;
+                }
+            }
+
+            if (questions[i].Topic != "N/A" && questions[i].Topic != "") {
+                if (topic != questions[i].Topic && topic != "") {
+                    topic = "-"
+                } else {
+                    topic = questions[i].Topic;
+                }
+            }
+
+            if (questions[i].Species != "N/A" && questions[i].Species != "") {
+                if (species != questions[i].Species && species != "") {
+                    species = "-"
+                } else {
+                    species = questions[i].Species;
+                }
+            }
+
+            if (questions[i].Resource != "N/A" && questions[i].Resource != "") {
+                if (resource != questions[i].Resource && resource != "") {
+                    resource = "-"
+                } else {
+                    resource = questions[i].Resource;
+                }
+            }
+
+            if (questions[i].lastusagedate != "N/A" && questions[i].lastusagedate != "") {
+                if (lastuseddate != questions[i].lastusagedate && lastuseddate != "") {
+                    lastuseddate = "-"
+                } else {
+                    lastuseddate = questions[i].lastusagedate;
+                }
+            }
+
+            if (questions[i].lastusageevent != "N/A" && questions[i].lastusageevent != "") {
+                if (lastusageevent != questions[i].lastusageevent && lastusageevent != "") {
+                    lastusageevent = "-"
+                } else {
+                    lastusageevent = questions[i].lastusageevent;
+                }
+            }
+        }
+
+        if (question == "-") {
+            question = "";
+        }
+
+        if (answer == "-") {
+            answer = "";
+        }
+
+        if (level == "-") {
+            level = "";
+        }
+
+        if (topic == "-") {
+            topic = "";
+        }
+
+        if (species == "-") {
+            species = "";
+        }
+        
+        if (resource == "-") {
+            resource = "";
+        }
+
+        if (lastuseddate == "-") {
+            lastuseddate = "";
+        }
+
+        if (lastusageevent == "-") {
+            lastusageevent = "";
+        }
+
+        try {
+            newQuestion.current.value = question;
+            newAnswer.current.value = answer;
+
+            newLevel.current.value = level;
+            newTopic.current.value = topic;
+            newSpecies.current.value = species;
+            newResource.current.value = resource;
+            newLastUsedDate.current.value = lastuseddate;
+            newLastUsedEvent.current.value = lastusageevent;
+        } catch (e) {
+            console.log("Error: " + e);
+        }
     }
     
     function QuestionDisplay({}) {
@@ -122,22 +245,25 @@ export function DuplicateDetect() {
                         <QuestionDisplay />
 
                         <h4>Fill in the fields below to create a new question that will replace the ones shown above.</h4>
-                        <p>Some information was automatically estimated and filled. You can change this if it is incorrect.</p>
+                        <p>We guessed some of the tags based off of the information the duplicate questions contained. However, our guess may not be correct. <strong>Always check the autofilled values!</strong></p>
 
                         <div className="question-card" >
                             <div className="col-1">
-                                <input type="text" id="new-question" className="select-box" placeholder="Question" ref={newQuestion}/>
-                                <input type="text" id="new-answer" className="select-box" placeholder="Answer" ref={newAnswer}/>
+                                <label>Question - Answer</label><br />
+                                <textarea type="text" maxlength="256" id="new-question" className="textarea-input" placeholder="Question" ref={newQuestion}/>
+                                <textarea type="text" maxlength="156" id="new-answer" className="textarea-input" placeholder="Answer" ref={newAnswer}/>
                             </div>
                             <div className="col-2">
-                                <input type="text" id="new_level" className="select-box" placeholder="Level" ref={newLevel}/>
-                                <input type="text" id="new-species" className="select-box" placeholder="Species"  ref={newSpecies}/>
-                                <input type="text" id="new-topic" className="select-box" placeholder="Topic" ref={newTopic}/>
+                                <label>Level - Species - Topic</label><br />
+                                <input type="text" maxlength="64" id="new_level" className="select-box" placeholder="Level" ref={newLevel}/>
+                                <input type="text" maxlength="64" id="new-species" className="select-box" placeholder="Species"  ref={newSpecies}/>
+                                <input type="text" maxlength="64" id="new-topic" className="select-box" placeholder="Topic" ref={newTopic}/>
                             </div>
                             <div className="question-info-holder">
-                                <input type="text" id="new-resource" className="select-box" placeholder="Resource" ref={newResource}/>
+                                <label>Resource - Last Usage Date - Last Usage Event</label><br />
+                                <input type="text" maxlength="64" id="new-resource" className="select-box" placeholder="Resource" ref={newResource}/>
                                 <input type="date" id="new-last-used-date" className="select-box" ref={newLastUsedDate}/>
-                                <input type="text" id="new-last-used-event" className="select-box" placeholder="Last Event Used At" ref={newLastUsedEvent}/>
+                                <input type="text" maxlength="64" id="new-last-used-event" className="select-box" placeholder="Last Event Used At" ref={newLastUsedEvent}/>
                             </div>
                         </div>
 

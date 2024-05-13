@@ -197,6 +197,20 @@ a.active {
   font-size: 14px;
 }
 
+.textarea-input {
+  width: 200px;
+  margin: 10px;
+  padding: 5px;
+  border-radius: 5px;
+  border: 1px solid white;
+  background-color: white;
+  color: black;
+  font-family: "Exo", sans-serif;
+  font-size: 14px;
+  resize: vertical;
+  height: 100px;
+}
+
 .filters-menu {
   padding: 50px;
   color: black;
