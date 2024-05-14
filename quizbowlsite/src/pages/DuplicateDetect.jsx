@@ -280,7 +280,8 @@ export function DuplicateDetect() {
             <div className="midbound">
                 <h1>Flag Duplicate Questions</h1>
                 <p>
-                As part of the move to this new database system, some questions ended up duplicated or were found to be stored multiple times in different database files. Since automated detection and merging of these files is difficult, you can help by identifying duplicates and tagging them with the correct information.
+                As part of the move to this new database system, some questions ended up duplicated or were found to be stored multiple times in different database files. Since automated detection and merging of these files is difficult, you can help by identifying duplicates and tagging them with the correct information.<br />
+                You can leave this page at any time. Your changes are saved every time you click the Submit Changes button.
                 </p>
                 {randomQuestions.length > 0 ? (
                     <div>
@@ -288,8 +289,9 @@ export function DuplicateDetect() {
 
                         <QuestionDisplay />
 
-                        <h4>Fill in the fields below to create a new question that will replace the ones shown above.</h4>
-                        <p>We guessed some of the tags based off of the information the duplicate questions contained. However, our guess may not be correct. <strong>Always check the autofilled values!</strong></p>
+                        <h4>Fill in the fields below with the correct information.</h4>
+                        <p>We guessed some of the tags based off of the information the duplicate questions contained. However, our guess may not be correct. <strong>Always check the autofilled values!</strong><br />
+                        You can also fill in new values here if you wish (for example, if no duplicate question had a topic, you can still specify one in the fields below).</p>
 
                         <div className="question-card" >
                             <div className="col-1">
@@ -311,6 +313,7 @@ export function DuplicateDetect() {
                             </div>
                         </div>
 
+                        <p>Clicking Submit will remove all questions shown on this page, and create a new question with the specified information above.</p>
                         <button id="fetch-duplicates" onClick={() => { removeDuplicates() }}>
                             Submit Changes
                         </button>
@@ -323,7 +326,7 @@ export function DuplicateDetect() {
                             You'll be shown a set of potential duplicate questions below. Please use the bottom-most question information form to fill in the correct information. Once finished, click the "Submit" button to save your changes. The system will automatically remove the duplicate questions and create a new question in its place with the updated data.
                         </p>
                         <button id="fetch-duplicates" onClick={() => { fetchQuestions() }}>
-                            Fetch Duplicate Questions
+                            Get Started
                         </button>
                         <img src="loading.gif" className="loading-symbol" id="duplicate-loading"/>
                     </div>
