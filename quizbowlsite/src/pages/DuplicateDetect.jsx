@@ -15,6 +15,51 @@ export function DuplicateDetect() {
     const newLastUsedDate = React.useRef(null);
     const newLastUsedEvent = React.useRef(null);
 
+    async function removeDuplicates() {
+        if (newLevel.current.value == "" || newTopic.current.value == "" || newSpecies.current.value == "" || newResource.current.value == "" || newLastUsedDate.current.value == "" || newLastUsedEvent.current.value == "") {
+            if (!window.confirm("You have left some fields blank. Are you sure you want to continue?")) {
+                return;
+            }
+        }
+
+        var newq = {
+            question: newQuestion.current.value,
+            answer: newAnswer.current.value,
+            level: newLevel.current.value,
+            topic: newTopic.current.value,
+            species: newSpecies.current.value,
+            resource: newResource.current.value,
+            lastused: newLastUsedDate.current.value,
+            lastusageevent: newLastUsedEvent.current.value
+        }
+
+        var object = {
+            questions: [newq]
+        }
+
+        const responseAdd = await fetch("https://qzblapi.azurewebsites.net/api/AddQuestions?uid=" + cookies.auth.uid + "&questions=" + encodeURIComponent(JSON.stringify(object)));
+        if (!responseAdd.ok) {
+            throw new Error("Failed to add new question.");
+        } else {
+            const responseRemove = await fetch("https://qzblapi.azurewebsites.net/api/RemoveQuestions?uid=" + cookies.auth.uid + "&ids=" + encodeURIComponent(JSON.stringify(randomQuestions.map((question) => question.id))));
+            if (!responseRemove.ok) {
+                throw new Error("Failed to remove old questions.");
+            } else {
+                console.log("Successfully removed duplicates and added new question.");
+                fetchQuestions();
+            }
+        }
+
+        try {
+            document.getElementById("duplicate-loading").style.display = "flex";
+            document.getElementById("fetch-duplicates").setAttribute("disabled", "true");
+        } catch (e) {
+            console.log("Error: " + e)
+            document.getElementById("duplicate-loading").style.display = "none";
+            document.getElementById("fetch-duplicates").removeAttribute("disabled");
+        }
+    }
+
     async function fetchQuestions() {
         try {
             document.getElementById("duplicate-loading").style.display = "flex";
@@ -56,9 +101,8 @@ export function DuplicateDetect() {
                   setRandomQuestions(data.endingQuestions)
 
                   document.getElementById("duplicate-loading").style.display = "none";
-                  document.getElementById("fetch-duplicates").removeAttribute("disabled");
 
-                  setTimeout(() => { autocomplete(data.endingQuestions); }, 500);
+                  setTimeout(() => { autocomplete(data.endingQuestions); document.getElementById("fetch-duplicates").removeAttribute("disabled"); }, 500);
 
             } else {    
                 console.log("No questions found.");
@@ -250,24 +294,24 @@ export function DuplicateDetect() {
                         <div className="question-card" >
                             <div className="col-1">
                                 <label>Question - Answer</label><br />
-                                <textarea type="text" maxlength="256" id="new-question" className="textarea-input" placeholder="Question" ref={newQuestion}/>
-                                <textarea type="text" maxlength="156" id="new-answer" className="textarea-input" placeholder="Answer" ref={newAnswer}/>
+                                <textarea type="text" maxLength="256" id="new-question" className="textarea-input" placeholder="Question" ref={newQuestion}/>
+                                <textarea type="text" maxLength="156" id="new-answer" className="textarea-input" placeholder="Answer" ref={newAnswer}/>
                             </div>
                             <div className="col-2">
                                 <label>Level - Species - Topic</label><br />
-                                <input type="text" maxlength="64" id="new_level" className="select-box" placeholder="Level" ref={newLevel}/>
-                                <input type="text" maxlength="64" id="new-species" className="select-box" placeholder="Species"  ref={newSpecies}/>
-                                <input type="text" maxlength="64" id="new-topic" className="select-box" placeholder="Topic" ref={newTopic}/>
+                                <input type="text" id="new_level" className="select-box" placeholder="Level" ref={newLevel}/>
+                                <input type="text" id="new-species" className="select-box" placeholder="Species"  ref={newSpecies}/>
+                                <input type="text" id="new-topic" className="select-box" placeholder="Topic" ref={newTopic}/>
                             </div>
                             <div className="question-info-holder">
                                 <label>Resource - Last Usage Date - Last Usage Event</label><br />
-                                <input type="text" maxlength="64" id="new-resource" className="select-box" placeholder="Resource" ref={newResource}/>
+                                <input type="text" id="new-resource" className="select-box" placeholder="Resource" ref={newResource}/>
                                 <input type="date" id="new-last-used-date" className="select-box" ref={newLastUsedDate}/>
-                                <input type="text" maxlength="64" id="new-last-used-event" className="select-box" placeholder="Last Event Used At" ref={newLastUsedEvent}/>
+                                <input type="text" id="new-last-used-event" className="select-box" placeholder="Last Event Used At" ref={newLastUsedEvent}/>
                             </div>
                         </div>
 
-                        <button id="fetch-duplicates" onClick={() => { fetchQuestions() }}>
+                        <button id="fetch-duplicates" onClick={() => { removeDuplicates() }}>
                             Submit Changes
                         </button>
                         <img src="loading.gif" className="loading-symbol" id="duplicate-loading"/>
