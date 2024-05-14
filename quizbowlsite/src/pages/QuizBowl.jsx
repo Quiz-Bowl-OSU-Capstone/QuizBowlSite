@@ -44,6 +44,18 @@ export function QuizBowl() {
     return csvData;
   }
 
+  function clearQuestions() {
+    setRandomQuestions([]);
+    localStorage.removeItem("questions");
+    localStorage.removeItem("lastuser");
+    localStorage.removeItem("lastfetched");
+    localStorage.removeItem("level");
+    localStorage.removeItem("species");
+    localStorage.removeItem("resource");
+    localStorage.removeItem("topic");
+    localStorage.removeItem("lastusedbefore");
+  }
+
   async function fetchSingleQuestion() {
     var params = "?uid=" + cookies.auth.uid;
 
@@ -352,7 +364,7 @@ export function QuizBowl() {
               </li>
             </ul>
           </form>
-          <button id="clear-questions">
+          <button id="clear-questions" onClick={clearQuestions}>
             Clear
           </button>
           <button id="gen-questions" onClick={handleClick}>
@@ -407,9 +419,7 @@ export function QuizBowl() {
           <button
             id="data-integrity-page"
             onClick={() => {
-              window.alert(
-                "We appreciate it, but this feature isn't built yet!"
-              );
+              window.location.href = "/duplicates";
             }}
           >
             Flag Duplicate Questions

@@ -116,7 +116,7 @@ a.active {
   color: white;
   padding: 10px;
   height: fill-available;
-  min-height: calc(100vh - 80px);
+  min-height: calc(100vh - 90px);
   overflow: auto;
 }
 
@@ -197,8 +197,29 @@ a.active {
   font-size: 14px;
 }
 
+.textarea-input {
+  width: 200px;
+  margin: 10px;
+  padding: 5px;
+  border-radius: 5px;
+  border: 1px solid white;
+  background-color: white;
+  color: black;
+  font-family: "Exo", sans-serif;
+  font-size: 14px;
+  resize: vertical;
+  height: 100px;
+}
+
 .filters-menu {
   padding: 50px;
   color: black;
   background-color: white;
+}
+
+.midbound {
+  text-align: center;
+  padding: 20px 50px;
+  margin-left: auto;
+  margin-right: auto;
 }
