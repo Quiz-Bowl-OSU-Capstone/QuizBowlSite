@@ -147,7 +147,7 @@ export function DuplicateDetect() {
             }
 
             if (questions[i].Level != "N/A" && questions[i].Level != "") {
-                if (level != questions[i].Level && level != "") {
+                if (!questions[i].Level.includes(level) && level != "") {
                     level = "-"
                 } else {
                     level = questions[i].Level;
@@ -155,7 +155,7 @@ export function DuplicateDetect() {
             }
 
             if (questions[i].Topic != "N/A" && questions[i].Topic != "") {
-                if (topic != questions[i].Topic && topic != "") {
+                if (!questions[i].Topic.includes(topic) && topic != "") {
                     topic = "-"
                 } else {
                     topic = questions[i].Topic;
@@ -163,7 +163,7 @@ export function DuplicateDetect() {
             }
 
             if (questions[i].Species != "N/A" && questions[i].Species != "") {
-                if (species != questions[i].Species && species != "") {
+                if (!questions[i].Species.includes(species) && species != "") {
                     species = "-"
                 } else {
                     species = questions[i].Species;
@@ -171,7 +171,7 @@ export function DuplicateDetect() {
             }
 
             if (questions[i].Resource != "N/A" && questions[i].Resource != "") {
-                if (resource != questions[i].Resource && resource != "") {
+                if (!questions[i].Resource.includes(resource) && resource != "") {
                     resource = "-"
                 } else {
                     resource = questions[i].Resource;
@@ -307,7 +307,7 @@ export function DuplicateDetect() {
                             </div>
                             <div className="question-info-holder">
                                 <label>Resource - Last Usage Date - Last Usage Event</label><br />
-                                <input type="text" id="new-resource" className="select-box" placeholder="Resource" ref={newResource}/>
+                                <textarea type="text" maxLength="256" id="new-resource" className="textarea-input" placeholder="Resource" ref={newResource}/>
                                 <input type="date" id="new-last-used-date" className="select-box" ref={newLastUsedDate}/>
                                 <input type="text" id="new-last-used-event" className="select-box" placeholder="Last Event Used At" ref={newLastUsedEvent}/>
                             </div>
