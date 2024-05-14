@@ -22,6 +22,9 @@ export function DuplicateDetect() {
             }
         }
 
+        document.getElementById("duplicate-loading").style.display = "flex";
+        document.getElementById("fetch-duplicates").setAttribute("disabled", "true");
+
         var newq = {
             question: newQuestion.current.value,
             answer: newAnswer.current.value,
@@ -30,29 +33,26 @@ export function DuplicateDetect() {
             species: newSpecies.current.value,
             resource: newResource.current.value,
             lastused: newLastUsedDate.current.value,
-            lastusageevent: newLastUsedEvent.current.value
+            lastevent: newLastUsedEvent.current.value
         }
 
         var object = {
             questions: [newq]
         }
 
-        const responseAdd = await fetch("https://qzblapi.azurewebsites.net/api/AddQuestions?uid=" + cookies.auth.uid + "&questions=" + encodeURIComponent(JSON.stringify(object)));
-        if (!responseAdd.ok) {
-            throw new Error("Failed to add new question.");
-        } else {
-            const responseRemove = await fetch("https://qzblapi.azurewebsites.net/api/RemoveQuestions?uid=" + cookies.auth.uid + "&ids=" + encodeURIComponent(JSON.stringify(randomQuestions.map((question) => question.id))));
-            if (!responseRemove.ok) {
-                throw new Error("Failed to remove old questions.");
-            } else {
-                console.log("Successfully removed duplicates and added new question.");
-                fetchQuestions();
-            }
-        }
-
         try {
-            document.getElementById("duplicate-loading").style.display = "flex";
-            document.getElementById("fetch-duplicates").setAttribute("disabled", "true");
+            const responseAdd = await fetch("https://qzblapi.azurewebsites.net/api/AddQuestions?uid=" + cookies.auth.uid + "&questions=" + encodeURIComponent(JSON.stringify(object)));
+            if (!responseAdd.ok) {
+                throw new Error("Failed to add new question.");
+            } else {
+                const responseRemove = await fetch("https://qzblapi.azurewebsites.net/api/RemoveQuestions?uid=" + cookies.auth.uid + "&ids=" + encodeURIComponent(JSON.stringify(randomQuestions.map((question) => question.id))));
+                if (!responseRemove.ok) {
+                    throw new Error("Failed to remove old questions.");
+                } else {
+                    console.log("Successfully removed duplicates and added new question.");
+                    fetchQuestions();
+                }
+            }
         } catch (e) {
             console.log("Error: " + e)
             document.getElementById("duplicate-loading").style.display = "none";
