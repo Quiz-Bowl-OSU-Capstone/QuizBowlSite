@@ -26,14 +26,14 @@ export function DuplicateDetect() {
         document.getElementById("fetch-duplicates").setAttribute("disabled", "true");
 
         var newq = {
-            question: newQuestion.current.value,
-            answer: newAnswer.current.value,
-            level: newLevel.current.value,
-            topic: newTopic.current.value,
-            species: newSpecies.current.value,
-            resource: newResource.current.value,
+            question: newQuestion.current.value.trim(),
+            answer: newAnswer.current.value.trim(),
+            level: newLevel.current.value.trim(),
+            topic: newTopic.current.value.trim(),
+            species: newSpecies.current.value.trim(),
+            resource: newResource.current.value.trim(),
             lastused: newLastUsedDate.current.value,
-            lastevent: newLastUsedEvent.current.value
+            lastevent: newLastUsedEvent.current.value.trim()
         }
 
         var object = {
