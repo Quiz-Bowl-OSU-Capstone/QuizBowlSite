@@ -16,7 +16,7 @@ export function DuplicateDetect() {
     const newLastUsedEvent = React.useRef(null);
 
     async function removeDuplicates() {
-        if (newLevel.current.value == "" || newTopic.current.value == "" || newSpecies.current.value == "" || newResource.current.value == "" || newLastUsedDate.current.value == "" || newLastUsedEvent.current.value == "") {
+        if (newLevel.current.value == "" || newTopic.current.value == "" || newSpecies.current.value == "" || newResource.current.value == "" || newQuestion.current.value == "" || newAnswer.current.value == "") {
             if (!window.confirm("You have left some fields blank. Are you sure you want to continue?")) {
                 return;
             }
