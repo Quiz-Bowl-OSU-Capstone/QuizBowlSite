@@ -291,7 +291,7 @@ export function DuplicateDetect() {
 
                         <h4>Fill in the fields below with the correct information.</h4>
                         <p>We guessed some of the tags based off of the information the duplicate questions contained. However, our guess may not be correct. <strong>Always check the autofilled values!</strong><br />
-                        You can also fill in new values here if you wish (for example, if no duplicate question had a topic, you can still specify one in the fields below).</p>
+                        You can also fill new values here if you wish (for example, if no duplicate question had a topic, you can still specify one in the fields below).</p>
 
                         <div className="question-card" >
                             <div className="col-1">
@@ -313,7 +313,7 @@ export function DuplicateDetect() {
                             </div>
                         </div>
 
-                        <p>Clicking Submit will remove all questions shown on this page, and create a new question with the specified information above.</p>
+                        <p>Clicking "Submit Changes" will remove all questions shown on this page from the database, create a new question with the specified information above, and fetch another set of duplicates to identify.</p>
                         <button id="fetch-duplicates" onClick={() => { removeDuplicates() }}>
                             Submit Changes
                         </button>
