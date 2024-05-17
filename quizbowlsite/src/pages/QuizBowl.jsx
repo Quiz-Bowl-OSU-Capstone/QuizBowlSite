@@ -506,9 +506,18 @@ export function QuizBowl() {
             )}
           </div>
         ))}
-        {(randomQuestions.length == 0 && cookies.auth != undefined) ? (
-          <p style={{"padding":"20px"}}>No questions are currently being displayed. This could be because you just signed in, or because no questions matched your filters. Try again with different or fewer filters enabled if this is the case.</p>
-        ): ""}
+        {(cookies.auth == undefined) ? (
+          <div>
+            <h1>Introducing Quizpedia!</h1>
+            <p>Quizpedia automates question generation, making it a snap to randomly pick questions out. It even includes the ability to filter them by multiple data points, track when each question was last used, and easily correct questions with missing data.
+            Quizpedia also allows quizmasters to import and export questions as CSV or PDF files, which allows them to easily print out, share, or add questions to the database without having to manually transfer generated questions to another sheet. In fact, Quizpedia allows questions to be added either from its web interface or from an imported sheet of questions!</p>
+            <h3>Why use Quizpedia?</h3>
+            <p>Quizmasters at Oregon State University’s 4-H youth development program previously employed an Excel spreadsheet to store a massive amount of questions that were used for the quiz bowl events they put on. This sheet was difficult to navigate, and required a person to manually go through and pick out questions to ask at these quiz bowl events. As a result, it was time consuming to prepare for these events. The sheet also often contained duplicate or wrong information, and it was difficult to truly randomize data from the table.</p>
+            <p>Quizpedia automates question storage, retrival, randomization, and cataloging. Questions can be shared more easily and the database keeps a central record of which questions were used and for which events. Quizpedia also can be accessed from anywhere, making it easier to use it on the go and with different users.</p>
+            <h3>How does it work?</h3>
+            <p>Quizpedia is built on the Azure Cloud Platform. Our goals were to design a system that is low-cost, easy to maintain and reliable, so we chose to use a serverless architecture in development. Instead, Quizpedia is comprised of three separate parts - the website itself, a central API, and the database which stores the question data.</p>
+          </div>
+        ): ("")}
       </div>
     );
   }
