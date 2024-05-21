@@ -50,6 +50,7 @@
   cursor: pointer;
   transition: background-color 0.3s ease-in-out;
   margin-left: 10px;
+  min-width: 80px;
 }
 
 .action-buttons-icon {
@@ -61,6 +62,7 @@
   cursor: pointer;
   transition: background-color 0.3s ease-in-out;
   margin-left: 10px;
+  width: 50px;
 }
 
 .action-buttons:hover {
@@ -80,6 +82,7 @@
   cursor: pointer;
   transition: background-color 0.3s ease-in-out;
   margin-left: 10px;
+  min-width: 80px;
 }
 
 .buttons-dark:hover {

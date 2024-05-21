@@ -393,10 +393,10 @@ export function QuizBowl() {
               </li>
             </ul>
           </form>
-          <button id="clear-questions" onClick={clearQuestions}>
+          <button className="mainbutton" id="clear-questions" onClick={clearQuestions}>
             Clear
           </button>
-          <button id="gen-questions" onClick={handleClick}>
+          <button className="mainbutton" id="gen-questions" onClick={handleClick}>
             Generate Questions
           </button>
           <button
@@ -471,6 +471,7 @@ export function QuizBowl() {
               removeCookie("auth");
               window.location.reload();
             }}
+            className="mainbutton"
           >
             Log out
           </button>
@@ -486,6 +487,7 @@ export function QuizBowl() {
             onClick={() => {
               window.location.href = "/login";
             }}
+            className="mainbutton"
           >
             Login
           </button>

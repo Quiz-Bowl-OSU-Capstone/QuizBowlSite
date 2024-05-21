@@ -24,9 +24,12 @@ button {
   border: 1px solid black;
   color: black;
   border-radius: 5px;
-  min-width: 100px;
   margin: 5px;
   padding: 10px;
+}
+
+.mainbutton {
+  min-width: 100px;
 }
 
 .pdfbutton {
