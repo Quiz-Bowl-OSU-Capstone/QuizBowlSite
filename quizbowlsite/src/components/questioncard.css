@@ -50,10 +50,27 @@
   cursor: pointer;
   transition: background-color 0.3s ease-in-out;
   margin-left: 10px;
+  min-width: 80px;
+}
+
+.action-buttons-icon {
+  background-color: #cccccc;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
+  margin-left: 10px;
+  width: 50px;
 }
 
 .action-buttons:hover {
   background-color: rgb(245, 83, 29);
+}
+
+.action-buttons-icon:hover {
+  background-color: #dddddd;
 }
 
 .buttons-dark {
@@ -65,6 +82,7 @@
   cursor: pointer;
   transition: background-color 0.3s ease-in-out;
   margin-left: 10px;
+  min-width: 80px;
 }
 
 .buttons-dark:hover {
