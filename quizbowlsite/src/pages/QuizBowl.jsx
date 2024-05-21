@@ -429,7 +429,11 @@ export function QuizBowl() {
           >
             Flag Duplicate Questions
           </button>
-          <button id="csv-import">
+          <button id="csv-import" onClick={() => {
+              window.alert(
+                "We appreciate it, but this feature isn't built yet!"
+              );
+            }}>
             Import Questions from CSV
           </button>
           <p>Note: Questions must be in the correct format to be imported with a CSV file. <a className="silentlink" href="/quizpedia-template.csv">Click here to download a CSV template</a>.</p>
