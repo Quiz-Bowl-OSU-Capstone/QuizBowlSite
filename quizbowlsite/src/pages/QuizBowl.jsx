@@ -517,15 +517,47 @@ export function QuizBowl() {
         ))}
         {(cookies.auth == undefined) ? (
           <div>
-            <h1>Welcome to Quizpedia!</h1>
-            <img src="quizpediademo.jpg" alt="Quizpedia Demo" className="marketing" />
-            <p>Quizpedia automates question generation, making it a snap to randomly pick questions out. It even includes the ability to filter them by multiple data points, track when each question was last used, and easily correct questions with missing data.
-            Quizpedia also allows quizmasters to import and export questions as CSV or PDF files, which allows them to easily print out, share, or add questions to the database without having to manually transfer generated questions to another sheet. In fact, Quizpedia allows questions to be added either from its web interface or from an imported sheet of questions!</p>
-            <h3>Why use Quizpedia?</h3>
-            <p>Quizmasters at Oregon State University’s 4-H youth development program previously employed an Excel spreadsheet to store a massive amount of questions that were used for the quiz bowl events they put on. This sheet was difficult to navigate, and required a person to manually go through and pick out questions to ask at these quiz bowl events. As a result, it was time consuming to prepare for these events. The sheet also often contained duplicate or incorrect information, and it was difficult to truly randomize data from the table.</p>
-            <p>Quizpedia automates question storage, retrival, randomization, and cataloging. Questions can be shared more easily and the database keeps a central record of which questions were used and for which events. Quizpedia also can be accessed from anywhere, making it easier to use it on the go and with different users.</p>
-            <h3>How does it work?</h3>
-            <p>Quizpedia is built on the Azure Cloud Platform. Our goals were to design a system that is low-cost, easy to maintain and reliable, so we chose to use a serverless architecture in development. Quizpedia is comprised of three separate parts - the website itself, a central API, and the database which stores the question data.</p>
+            <div class="row">
+              <div class="column">
+                <h1>Welcome to Quizpedia!</h1>
+                <img src="quizpediademo.jpg" alt="Quizpedia Demo" className="marketing" />
+                <p>Quizpedia automates question generation, making it a snap to randomly pick questions out. It even includes the ability to filter them by multiple data points, track when each question was last used, and easily correct questions with missing data.
+                Quizpedia also allows quizmasters to import and export questions as CSV or PDF files, which allows them to easily print out, share, or add questions to the database without having to manually transfer generated questions to another sheet. In fact, Quizpedia allows questions to be added either from its web interface or from an imported sheet of questions!</p>
+                <h3>Why use Quizpedia?</h3>
+                <p>Quizmasters at Oregon State University’s 4-H youth development program previously employed an Excel spreadsheet to store a massive amount of questions that were used for the quiz bowl events they put on. This sheet was difficult to navigate, and required a person to manually go through and pick out questions to ask at these quiz bowl events. As a result, it was time consuming to prepare for these events. The sheet also often contained duplicate or incorrect information, and it was difficult to truly randomize data from the table.</p>
+                <p>Quizpedia automates question storage, retrival, randomization, and cataloging. Questions can be shared more easily and the database keeps a central record of which questions were used and for which events. Quizpedia also can be accessed from anywhere, making it easier to use it on the go and with different users. Quizpedia is also designed to be lightweight, low-cost, and fit the needs of 4-H quizmasters, so it is customized to the needs of the program.</p>
+                <h3>How does it work?</h3>
+                <p>Quizpedia is built on the Azure Cloud Platform. Our goals were to design a system that is low-cost, easy to maintain and reliable, so we chose to use a serverless architecture in development. Quizpedia is comprised of three separate parts - the website itself, a central API, and the database which stores the question data.</p>              
+              </div>
+              <div class="column">
+                <h3>How do I use Quizpedia?</h3>
+                <p>Users will need to log into the website using the login button on the top left side of the page. If you need an account, please email Candi Bothum at bothumca@oregonstate.edu</p>
+                <p>Once logged in, the left sidebar shows options for filtering, retrieving, and downloading questions. Users can select filters to narrow down the questions they want to generate. Clicking the "Generate Questions" button will fetch a list of questions based on the filters selected. From there, users can can view the questions on the page and download them as a PDF or CSV file.</p>
+                <p>The left sidebar will also show options for users to help improve the quality of question data, by filling missing data fields or flagging duplicate questions. If you have spare time and want to help the project in some way, this is a good way to do so!</p>
+                <h3>I need help!</h3>
+                <p>As our project is still under development currently, Aura Fairchild is the primary contact for Quizpedia (fairchau@oregonstate.edu). When emailing, please include your name and a detailed description of what you were trying to do, and the error message (if any). For help inquiries after June 7th, please reach out to our project partner for Quizpedia, Candi Bothum, at bothumca@oregonstate.edu.</p>
+                <h3>More Info / Useful Links</h3>
+                <ul>
+                  <li><a href="https://github.com/Quiz-Bowl-OSU-Capstone/Quiz-Bowl">Quizpedia API Github Repository (for codebase and technical documentation)</a></li>
+                  <li><a href="https://github.com/Quiz-Bowl-OSU-Capstone/QuizBowlSite">Quizpedia Website Github Repository (for codebase and technical documentation)</a></li>
+                </ul>
+                <h4>Authors</h4>
+                <ul>
+                  <li>Aura Fairchild</li>
+                  <li>Daksh Viradiya</li>
+                  <li>Jay Shah</li>
+                  <li>Ricardo Gonzalez</li>
+                </ul>
+                <h4>Contributors</h4>
+                <ul>
+                  <li>Candi Bothum - Project Partner</li>
+                  <li>Lucas Turpin - IT Contact</li>
+                  <li>Kirsten Winters - Capstone Professor</li>
+                  <li>Alex Ulbrich - Capstone Professor</li>
+                </ul>
+              </div>
+            </div>
+            <h5>Launched in Beaver Nation on June 7th.</h5>
           </div>
         ): ("")}
       </div>
