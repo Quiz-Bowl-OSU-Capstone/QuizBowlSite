@@ -179,6 +179,30 @@ export function QuizBowl() {
     });
   }
 
+  function handleMove(moveDir, index, qid) {
+    if (moveDir === "up") {
+      if (index === 0) {
+        return;
+      }
+      const newQuestions = [...randomQuestions];
+      const temp = newQuestions[index];
+      newQuestions[index] = newQuestions[index - 1];
+      newQuestions[index - 1] = temp;
+      setRandomQuestions(newQuestions);
+      setSelectedQuestion(qid);
+    } else if (moveDir === "down") {
+      if (index === randomQuestions.length - 1) {
+        return;
+      }
+      const newQuestions = [...randomQuestions];
+      const temp = newQuestions[index];
+      newQuestions[index] = newQuestions[index + 1];
+      newQuestions[index + 1] = temp;
+      setRandomQuestions(newQuestions);
+      setSelectedQuestion(qid);
+    }
+  }
+
   // Function to handle edit button click
   function handleEditClick() {
     // Edit
@@ -500,6 +524,12 @@ export function QuizBowl() {
                 </p>
                 <img src="loading.gif" alt="Loading..." id="q-operation-loading" className="loading-symbol" />
                 <div>
+                  <button className="action-buttons-icon" onClick={() => { handleMove("up", index, question.id) }}>
+                    <img src="/chevron.png" className="icon-rotated"/>
+                  </button>
+                  <button className="action-buttons-icon" onClick={() => { handleMove("down", index, question.id) }}>
+                    <img src="/chevron.png" className="icon"/>
+                  </button>
                   {/* Edit button */}
                   <button className="action-buttons" onClick={() => { handleEditClick() }} title="Edit this question. Changes are saved to the database.">Edit</button>
                   {/* Remove button */}
