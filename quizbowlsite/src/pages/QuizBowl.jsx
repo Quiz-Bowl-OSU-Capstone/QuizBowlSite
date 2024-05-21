@@ -30,6 +30,7 @@ export function QuizBowl() {
   const [speciesFilter, setSpeciesFilter] = useState("nofilter");
   const [resourceFilter, setResourceFilter] = useState("nofilter");
   const [topicFilter, setTopicFilter] = useState("nofilter");
+  const [savedDate, setSavedDate] = useState("");
 
   function handleExportCSV() {
     const csvData = randomQuestions.map((question) => ({
@@ -46,6 +47,7 @@ export function QuizBowl() {
 
   function clearQuestions() {
     setRandomQuestions([]);
+
     localStorage.removeItem("questions");
     localStorage.removeItem("lastuser");
     localStorage.removeItem("lastfetched");
@@ -54,6 +56,12 @@ export function QuizBowl() {
     localStorage.removeItem("resource");
     localStorage.removeItem("topic");
     localStorage.removeItem("lastusedbefore");
+
+    setLevelFilter("nofilter");
+    setSpeciesFilter("nofilter");
+    setResourceFilter("nofilter");
+    setTopicFilter("nofilter");
+    setSavedDate("");
   }
 
   async function fetchSingleQuestion() {
@@ -73,6 +81,10 @@ export function QuizBowl() {
 
     if (localStorage.getItem("topic")) {
       params += "&topic=" + localStorage.getItem("topic");
+    }
+  
+    if (localStorage.getItem("date")) {
+      params += "&date=" + encodeURIComponent(date);
     }
 
     params += "&amt=1";
@@ -146,22 +158,13 @@ export function QuizBowl() {
     }
 
     if (document.getElementById("last-used-before-date").value) {
-      params +=
-        "&lastusedbefore=" +
-        encodeURIComponent(
-          new Date(
-            document.getElementById("last-used-before-date").value
-          ).toJSON()
-        );
-      localStorage.setItem(
-        "lastusedbefore",
-        document.getElementById("last-used-before-date").value
-      );
-    } else {
-      localStorage.removeItem("lastusedbefore");
-    }
+      var date = new Date(document.getElementById("last-used-before-date").value).toISOString().substring(0, 10);
 
-    console.log("Params: ", params);
+      params += "&date=" + encodeURIComponent(date);
+      localStorage.setItem("date", date);
+    } else {
+      localStorage.removeItem("date");
+    }
 
     fetchRandomQuestions(params);
   }
@@ -359,6 +362,8 @@ export function QuizBowl() {
                     type="date"
                     className="select-box"
                     id="last-used-before-date"
+                    value={savedDate}
+                    onChange={(e) => setSavedDate(e.target.value)}
                   />
                 </label>
               </li>
@@ -638,6 +643,11 @@ export function QuizBowl() {
           if (localStorage.topic) {
             console.log("Setting topic to", localStorage.topic);
             setTopicFilter(localStorage.topic);
+          }
+
+          if (localStorage.date) {
+            console.log("Setting date to", localStorage.date);
+            setSavedDate(localStorage.date);
           }
         } else {
           localStorage.clear();
