@@ -242,6 +242,7 @@ a.active {
 .icon-rotated {
   width: 10px;
   transform: rotate(180deg);
+}
 
 .row {
   display: flex;
