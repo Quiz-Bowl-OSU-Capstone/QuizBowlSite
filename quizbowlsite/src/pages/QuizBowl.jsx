@@ -208,7 +208,7 @@ export function QuizBowl() {
     // Edit
   }
 
-  function handleReplaceClick(qid) {
+  function handleReplaceClick(qid, index) {
     if (window.confirm("By clicking OK, you are going to replace this question with a new randomly-selected question from the database. Are you sure?")) {
       console.log("Confirmed replace operation with ID" + qid);
 
@@ -216,9 +216,10 @@ export function QuizBowl() {
       fetchSingleQuestion().then((newQuestion) => {
         if (newQuestion != null) {
           var questions = randomQuestions.filter((question) => question.id != qid);
-          questions = questions.concat(newQuestion);
+          questions.splice(index, 0, newQuestion);
           
           setRandomQuestions(questions);
+          setSelectedQuestion(newQuestion.id);
           localStorage.setItem("questions", JSON.stringify(questions));
           localStorage.setItem("lastuser", cookies.auth.uid);
           localStorage.setItem("lastfetched", new Date().getTime() / 1000);
@@ -240,12 +241,13 @@ export function QuizBowl() {
         var questions = randomQuestions.filter((question) => question.id != qid);
         
         if (newQuestion != null) {
-          questions = questions.concat(newQuestion);
+          questions.splice(index, 0, newQuestion);
         } else {
           window.alert("Failed to replace question. This could be because there are not enough questions in the database with similar filters, or because of a network error.")  
         }
 
         setRandomQuestions(questions);
+        setSelectedQuestion(newQuestion.id);
         localStorage.setItem("questions", JSON.stringify(questions));
         localStorage.setItem("lastuser", cookies.auth.uid);
         localStorage.setItem("lastfetched", new Date().getTime() / 1000);
@@ -538,7 +540,7 @@ export function QuizBowl() {
                   {(randomQuestions.length < 12) ? (
                     <button className="action-buttons" disabled={true} title="This button is disabled because there are no other questions in the database to replace this question with.">Replace</button>
                   ): (
-                    <button className="action-buttons" onClick={() => { handleReplaceClick(question.id) }} title="Replace this question with a new randomly picked one.">Replace</button>
+                    <button className="action-buttons" onClick={() => { handleReplaceClick(question.id, index) }} title="Replace this question with a new randomly picked one.">Replace</button>
                   )}
                   {/* Delete button */}
                   <button className="buttons-dark" onClick={() => { handleDeleteClick(question.id) }} title="Delete this question from the database and replace it with a new randomly picked one.">Delete</button>
