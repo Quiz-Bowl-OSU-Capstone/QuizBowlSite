@@ -1,15 +1,4 @@
-// export function Contact() {
-//   return (
-//     <h3>
-//       <ul>
-//         <li>Aura Fairchild</li>
-//         <li>Ricardo Gonzalez</li>
-//         <li>Jay Shah</li>
-//         <li>Daksh Viradiya</li>
-//       </ul>
-//     </h3>
-//   );
-// }
+
 export function Contact() {
   const contactStyle = {
     display: 'flex',
@@ -66,11 +55,23 @@ export function Contact() {
         </li>
       </ul>
       <br/>
+
+    
       <div style={organizationInfoStyle}>
         <h3><strong>Organization Information:</strong></h3>
         <p>4H Oregon Quiz Bowl - Oregon State Exntension</p>
         <p>Project Partner: Candi Bothum</p>
         <p>Email: candi.bothum@oregonstate.edu</p>
+      </div>
+
+      <div style={organizationInfoStyle}>
+        <h3><strong>Oregon State IT Support</strong></h3>
+        <p>Information Technology Help:</p>
+        <p>Phone Number: 541-737-8787</p>
+        <p>Email: coe.support@oregonstate.edu</p>
+        <p>Link: https://it.engineering.oregonstate.edu/contacting-helpdesk</p>
+        <p>*Please contact Engineering Information Technology for assistance using either the online support portal at https://support.engineering.oregonstate.edu </p>
+        <p>*Live, in-person technical assistance for undergraduates, is available at the OSU Service Desk located in Milne Hall.</p>
       </div>
     </div>
   );
