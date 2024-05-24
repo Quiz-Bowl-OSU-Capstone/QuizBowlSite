@@ -6,6 +6,7 @@ import { About } from "./pages/About";
 import { Contact } from "./pages/Contact";
 import { Help } from "./pages/Help";
 import { Login } from "./pages/Login";
+import { ManageAccounts } from "./pages/ManageAccounts";
 import App from "./Home";
 
 import "./index.css";
@@ -28,6 +29,7 @@ const router = createBrowserRouter([
       { path: "contact", element: <Contact /> },
       { path: "help", element: <Help /> },
       { path: "duplicates", element: <DuplicateDetect /> },
+      { path: "manageaccounts", element: <ManageAccounts />}
     ],
   },
 ]);

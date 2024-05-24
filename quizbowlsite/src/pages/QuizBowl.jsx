@@ -471,7 +471,7 @@ export function QuizBowl() {
             <button
             id="manage-accounts-button"
             onClick={() => {
-              window.alert("Not yet working!");
+              window.location.href = "/manageaccounts";
             }}
             className="mainbutton"
           >
