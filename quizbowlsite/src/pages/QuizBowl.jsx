@@ -32,6 +32,55 @@ export function QuizBowl() {
   const [topicFilter, setTopicFilter] = useState("nofilter");
   const [savedDate, setSavedDate] = useState("");
 
+  const [csvFile, setCsvFile] = useState(null);
+  const [csvFileName, setCsvFileName] = useState("");
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    setCsvFile(file);
+    setCsvFileName(file ? file.name : "");
+  };
+
+  const handleImportCSV = async () => {
+    if (csvFile) {
+      Papa.parse(csvFile, {
+        header: true,
+        skipEmptyLines: true,
+        complete: async (result) => {
+          const csvData = result.data;
+          console.log("Parsed CSV data:", csvData);
+          // API to save the data to the database
+          try {
+            const response = await fetch(
+              "https://qzblapi.azurewebsites.net/api/AddQuestions",
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify(csvData),
+              }
+            );
+            if (response.ok) {
+              alert("Questions imported successfully!");
+            } else {
+              alert("Failed to import questions.");
+            }
+          } catch (error) {
+            console.error("Error importing questions:", error);
+            alert("An error occurred while importing questions.");
+          }
+        },
+        error: (error) => {
+          console.error("Error parsing CSV file:", error);
+          alert("Failed to parse CSV file.");
+        },
+      });
+    } else {
+      alert("Please select a CSV file to import.");
+    }
+  };
+
   function handleExportCSV() {
     const csvData = randomQuestions.map((question) => ({
       Question: question.Question,
@@ -395,9 +444,7 @@ export function QuizBowl() {
               </li>
             </ul>
           </form>
-          <button className="mainbutton" id="clear-questions" onClick={clearQuestions}>
-            Clear
-          </button>
+          <button className="mainbutton" id="clear-questions" onClick={clearQuestions}>Clear</button>
           <button className="mainbutton" id="gen-questions" onClick={handleClick}>
             Generate Questions
           </button>
@@ -455,14 +502,17 @@ export function QuizBowl() {
           >
             Flag Duplicate Questions
           </button>
-          <button id="csv-import" onClick={() => {
-              window.alert(
-                "We appreciate it, but this feature isn't built yet!"
-              );
-            }}>
-            Import Questions from CSV
-          </button>
-          <p>Note: Questions must be in the correct format to be imported with a CSV file. <a className="silentlink" href="/quizpedia-template.csv">Click here to download a CSV template</a>.</p>
+          <input type="file" accept=".csv" onChange={handleFileChange} />
+          <button onClick={handleImportCSV}>Import CSV</button>
+          {csvFileName && <p>Selected file: {csvFileName}</p>}
+          <p>
+            Note: Questions must be in the correct format to be imported with a
+            CSV file.{" "}
+            <a className="silentlink" href="/quizpedia-template.csv">
+              Click here to download a CSV template
+            </a>
+            .
+          </p>
           <hr />
           <p>
             You're logged in as <strong>{cookies.auth.username}</strong>.
