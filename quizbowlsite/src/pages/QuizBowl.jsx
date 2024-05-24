@@ -467,6 +467,17 @@ export function QuizBowl() {
           <p>
             You're logged in as <strong>{cookies.auth.username}</strong>.
           </p>
+          {cookies.auth.admin ? (
+            <button
+            id="manage-accounts-button"
+            onClick={() => {
+              window.alert("Not yet working!");
+            }}
+            className="mainbutton"
+          >
+            Manage Accounts
+          </button>
+          ):""}
           <button
             id="login-button"
             onClick={() => {
