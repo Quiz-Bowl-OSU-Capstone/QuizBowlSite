@@ -12,13 +12,15 @@ export function Login() {
 
   async function handleLogin() {
     document.getElementById("login-button").setAttribute("disabled", "true");
+    document.getElementById("username").setAttribute("disabled", "true");
+    document.getElementById("password").setAttribute("disabled", "true");
     loading = true;
     document.getElementById("login-loading").style.display = "flex";
     setTimeout(() => {
       if (loading) {
         document.getElementById("login-extra-dialog").style.display = "block";
       } 
-    }, 5000);
+    }, 4000);
     try {
       var username = document.getElementById("username").value;
       var password = document.getElementById("password").value;
@@ -43,15 +45,19 @@ export function Login() {
       } else {
         removeCookie('auth');
         loading = false;
+        document.getElementById("login-loading").style.display = "none";
         window.alert("Invalid username or password. Please try again.");
         document.getElementById("login-button").removeAttribute("disabled");
-        document.getElementById("login-loading").style.display = "none";
+        document.getElementById("username").removeAttribute("disabled");
+        document.getElementById("password").removeAttribute("disabled");
         document.getElementById("password").value = "";
       }
     } catch (error) {
       console.error("Error fetching account details:", error);
       loading = false;
       document.getElementById("login-button").removeAttribute("disabled");
+      document.getElementById("username").removeAttribute("disabled");
+      document.getElementById("password").removeAttribute("disabled");
       document.getElementById("login-loading").style.display = "none";
     }
   }
@@ -67,11 +73,11 @@ export function Login() {
           <input type="password" id="password" placeholder="Password" onKeyDown={handleEnterKey}/>
         </label>
         <br />
-        <button id="login-button" onClick={() => { handleLogin() }}>Login</button>
+        <button id="login-button" className="mainbutton" onClick={() => { handleLogin() }}>Login</button>
         <img src="loading.gif" className="loading-symbol" id="login-loading"/>
         <div className="dialog-div" id="login-extra-dialog">
           <h4>Looks like this is taking awhile.</h4>
-          <p>If this is the first time that you've used the website in the last 2 hrs or so, the website is likely still restarting. Please do not refresh the page unless you receive an error.</p>
+          <p>The website is most likely still coming online. Please do not refresh the page unless you receive an error.</p>
         </div>
       </div>
     </>
