@@ -35,12 +35,14 @@ export function QuizBowl() {
   const [csvFile, setCsvFile] = useState(null);
   const [csvFileName, setCsvFileName] = useState("");
 
+  // Handles file selection for CSV import
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     setCsvFile(file);
     setCsvFileName(file ? file.name : "");
   };
 
+  // Imports CSV file data and processes it
   const handleImportCSV = async () => {
     if (csvFile) {
       Papa.parse(csvFile, {
@@ -81,6 +83,7 @@ export function QuizBowl() {
     }
   };
 
+  // Prepares and returns CSV data for export
   function handleExportCSV() {
     const csvData = randomQuestions.map((question) => ({
       Question: question.Question,
@@ -94,6 +97,7 @@ export function QuizBowl() {
     return csvData;
   }
 
+  // Clears all questions and related local storage data
   function clearQuestions() {
     setRandomQuestions([]);
 
@@ -113,6 +117,7 @@ export function QuizBowl() {
     setSavedDate("");
   }
 
+  // Fetches a single random question from the backend
   async function fetchSingleQuestion() {
     var params = "?uid=" + cookies.auth.uid;
 
@@ -306,6 +311,7 @@ export function QuizBowl() {
     }
   }
 
+  // Prompts the user for marking questions as used on download and performs the update
   async function handleQuestionDownload() {
     let event = prompt(
       "Do you want to mark these questions as being used on today's date?\n\nClicking OK will mark the downloaded questions as having been last used on today's date. Clicking Cancel will not mark the questions as used, but will still download the questions to your computer.\n\nYou can optionally enter an event name for recordkeeping purposes, but this is not required.",
@@ -326,6 +332,7 @@ export function QuizBowl() {
     }
   }
 
+   // Initiates download of current question set as a CSV file
   function handleDownloadCSV() {
     try {
       const csvData = handleExportCSV();
@@ -345,6 +352,7 @@ export function QuizBowl() {
     }
   }
 
+  // Displays account status and filtering options in the sidebar
   function AccountStatus({ user, filters }) {
     if (user != undefined && user.uid > 0) {
       return (
@@ -548,6 +556,7 @@ export function QuizBowl() {
     }
   }
 
+  // Renders a display of questions, handling interactions like clicking on a question card
   function QuestionDisplay({}) {
     return (
       <div className="question-holder">
@@ -648,6 +657,7 @@ export function QuizBowl() {
     );
   }
 
+   // Fetches a list of random questions based on the current filter settings
   async function fetchRandomQuestions(params) {
     try {
       document.getElementById("gen-questions").setAttribute("disabled", "true");
@@ -698,6 +708,7 @@ export function QuizBowl() {
     }
   }
 
+  // Effect hook for initializing and loading data when the component mounts
   useEffect(() => {
     async function fetchFilters() {
       try {
@@ -778,6 +789,9 @@ export function QuizBowl() {
     }
   }, []);
 
+  
+
+  // Main component return function rendering the application UI with various interactive components
   return (
     <div className="main-holder">
       <div className="content-holder">
