@@ -53,16 +53,7 @@ export function QuizBowl() {
           console.log("Parsed CSV data:", csvData);
           // API to save the data to the database
           try {
-            const response = await fetch(
-              "https://qzblapi.azurewebsites.net/api/AddQuestions",
-              {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify(csvData),
-              }
-            );
+            const response = await fetch("https://qzblapi.azurewebsites.net/api/AddQuestions?uid=" + cookies.auth.uid + "&questions=" + encodeURIComponent(JSON.stringify(csvData)));
             if (response.ok) {
               alert("Questions imported successfully!");
             } else {
@@ -495,9 +486,7 @@ export function QuizBowl() {
           <button
             id="data-integrity-page"
             onClick={() => {
-              window.alert(
-                "We appreciate it, but this feature isn't built yet!"
-              );
+              window.location.href="/missinginfo";
             }}
           >
             Fill In Missing Data
@@ -510,7 +499,8 @@ export function QuizBowl() {
           >
             Flag Duplicate Questions
           </button>
-          <input type="file" accept=".csv" onChange={handleFileChange} />
+          <p>To import a CSV file, select the CSV file and then click "Import CSV".</p>
+          <input type="file" accept=".csv" onChange={handleFileChange} className="select-box"/>
           <button onClick={handleImportCSV}>Import CSV</button>
           {csvFileName && <p>Selected file: {csvFileName}</p>}
           <p>
@@ -525,6 +515,17 @@ export function QuizBowl() {
           <p>
             You're logged in as <strong>{cookies.auth.username}</strong>.
           </p>
+          {cookies.auth.admin ? (
+            <button
+            id="manage-accounts-button"
+            onClick={() => {
+              window.location.href = "/manageaccounts";
+            }}
+            className="mainbutton"
+          >
+            Manage Accounts
+          </button>
+          ):""}
           <button
             id="login-button"
             onClick={() => {

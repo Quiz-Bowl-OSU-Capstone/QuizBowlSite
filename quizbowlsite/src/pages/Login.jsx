@@ -37,7 +37,8 @@ export function Login() {
       if (data.uid > 0) {
         setCookie('auth', {
           uid: data.uid,
-          username: data.username
+          username: data.username,
+          admin: data.admin
         });
         loading = false;
         console.log("Logged in as", data.username);
