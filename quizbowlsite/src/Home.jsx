@@ -10,7 +10,6 @@ export default function App() {
         <NavLink to="/about">About</NavLink>
         <NavLink to="/contact">Contact</NavLink>
         <NavLink to="/help">Help</NavLink>
-        <NavLink to="/missingInfo">MissingInfo</NavLink>
       </nav>
       <main>{<Outlet />}</main>
     </CookiesProvider>
