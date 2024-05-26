@@ -20,12 +20,51 @@ export function ManageAccounts() {
         }
     }
 
+    var handleEnterKeyCreate = (event) => {
+        if (event.key === "Enter") {
+            handleCreateAccount(document.getElementById("password").value);
+        }
+    }
+
     async function getAccounts(pass) {
         const response = await fetch("https://qzblapi.azurewebsites.net/api/ListAccounts?uid=" + cookies.auth.uid + "&currentpass=" + encodeURIComponent(pass));
         const data = await response.json();
         console.log(data)
         setAccounts(data.accounts);
     }
+
+    async function handleCreateAccount(currentpass) {
+        var newusername = document.getElementById("newusername").value;
+
+        if (newusername == "") {
+            alert("You need to enter a username to create an account.");
+        } else if (currentpass == "") {
+            alert("You need to enter your password to create an account.");
+        } else {
+            var params = "?uid=" + cookies.auth.uid + "&currentpass="  + encodeURIComponent(currentpass) + "&username=" + newusername;
+
+            if (document.getElementById("newpassword").value != "") {
+                params += "&password=" + document.getElementById("newpassword").value;
+            }
+
+            if (document.getElementById("newadmin").checked) {
+                params += "&admin=true";
+            }
+
+            const response = await fetch("https://qzblapi.azurewebsites.net/api/AddAccount" + params);
+            const data = await response.json();
+            if (data.Error) {
+                alert(data.Error);
+            } else {
+                alert("Account created successfully!");
+                getAccounts(currentpass);
+            }
+        }
+    }
+
+    async function handleResetPassword(username) {}
+
+    async function handleAccountDelete(username) {}
 
     function AccountDisplay({}) {
         if (accounts.length == 0) {
@@ -50,8 +89,8 @@ export function ManageAccounts() {
 
                         {selectedAccount == account.username ? (
                         <div className="question-info-holder">
-                            <button className="mainbutton">Reset Password</button>
-                            <button className="mainbutton">Delete Account</button>
+                            <button className="mainbutton" onClick={() => handleResetPassword(account.username)}>Reset Password</button>
+                            <button className="mainbutton" onClick={() => handleAccountDelete(account.username)}>Delete Account</button>
                         </div>
                         ) : "Administrator: " + account.admin.toString().toUpperCase()}
                     </div>
@@ -62,10 +101,10 @@ export function ManageAccounts() {
                     <div className="dialog">
                         <p>You need to provide a unique username to identify the account.<br/>Providing a password is optional - if none is provided, a random one will be generated.</p>
                         <label>
-                            <input type="text" id="newusername" placeholder="Username"/>
+                            <input type="text" id="newusername" placeholder="New Username"/>
                         </label>
                         <label>
-                            <input type="password" id="newpassword" placeholder="Password"/>
+                            <input type="password" id="newpassword" placeholder="New Password"/>
                         </label>
                         <br />
                         <h4>Do you want this account to be an administrator?</h4>
@@ -75,8 +114,11 @@ export function ManageAccounts() {
                         <label>
                             <input type="checkbox" id="newadmin" className="select-box"/>
                         </label>
+                        <hr />
+                        <p>In order to authorize the creation of a new account, please re-enter your password.</p>
+                        <input className="loginbox" type="password" id="password" placeholder="Password" onKeyDown={handleEnterKey}/>
                     </div>
-                    <button className="mainbutton">Create Account</button>
+                    <button className="mainbutton" onClick={() => handleCreateAccount(document.getElementById("password").value)}>Create Account</button>
                 </div>
             );
         }
