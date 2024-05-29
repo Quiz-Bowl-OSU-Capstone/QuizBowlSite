@@ -35,9 +35,13 @@ export function ManageAccounts() {
     }
 
     async function getAccounts(pass) {
-        document.getElementById("login-loading").style.display = "flex";
-        document.getElementById("password").setAttribute("disabled", "true");
-        document.getElementById("relogin").setAttribute("disabled", "true");
+        try {
+            document.getElementById("login-loading").style.display = "flex";
+            document.getElementById("password").setAttribute("disabled", "true");
+            document.getElementById("relogin").setAttribute("disabled", "true");
+        } catch (e) {
+            console.log("Caught an error trying to hide the loading symbol, this is probably okay to ignore.")
+        }
 
         const response = await fetch("https://qzblapi.azurewebsites.net/api/ListAccounts?uid=" + cookies.auth.uid + "&currentpass=" + encodeURIComponent(pass));
         if (!response.ok) {
@@ -47,10 +51,15 @@ export function ManageAccounts() {
         var data = await response.json();
         if (data.Error) {
             alert("Failed to authenticate. Please try again.");
-            
-            document.getElementById("login-loading").style.display = "none";
-            document.getElementById("password").removeAttribute("disabled");
-            document.getElementById("relogin").removeAttribute("disabled");
+
+            try {
+                document.getElementById("login-loading").style.display = "none";
+                document.getElementById("password").removeAttribute("disabled");
+                document.getElementById("relogin").removeAttribute("disabled");
+            } catch (e) {
+                console.log("Caught an error trying to hide the loading symbol, this is probably okay to ignore.")
+            }
+
             return;
         }
         var accounts = data.accounts.sort();
@@ -252,11 +261,11 @@ export function ManageAccounts() {
         if (user != undefined && user.uid > 0 && user.admin) {
             return (
             <div className="midbound">
-                <img src="loading.gif" className="loading-symbol" id="login-loading"/>
                 <h4>Manage Accounts</h4>
                 <p>Admins can use this page to create, reset password for, and delete user accounts for Quizpedia. Click on any account to view options for it.</p>
                 <AccountDisplay />
                 <button className="mainbutton" onClick={() => window.location.href = "/"}>Back to Home</button>
+                <img src="loading.gif" className="loading-symbol" id="login-loading"/>
             </div>
             );
         } else {
