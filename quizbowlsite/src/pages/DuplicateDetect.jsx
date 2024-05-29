@@ -275,7 +275,7 @@ export function DuplicateDetect() {
     }
 
     function FlagDuplicates({ user }) {
-        if (user != undefined && user.uid > 0) {
+        if (user != undefined && user.uid > 0 && user.admin) {
             return (
             <div className="midbound">
                 <h1>Flag Duplicate Questions</h1>
@@ -336,8 +336,8 @@ export function DuplicateDetect() {
         } else {
             return (
             <div className="midbound">
-                <h4>You're not logged in.</h4>
-                <p>Please log in to view questions and use the Quizpedia software.</p>
+                <h4>You're not logged into an admin account.</h4>
+                <p>Please log into an admin account to use this part of Quizpedia.</p>
                 <button
                 id="login-button"
                 onClick={() => {

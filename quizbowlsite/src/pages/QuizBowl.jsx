@@ -482,36 +482,40 @@ export function QuizBowl() {
             Download as CSV
           </button>
           <hr />
-          <h3 style={{ textAlign: "center" }}>More Options</h3>
-          <button
-            id="data-integrity-page"
-            onClick={() => {
-              window.location.href="/missinginfo";
-            }}
-          >
-            Fill In Missing Data
-          </button>
-          <button
-            id="data-integrity-page"
-            onClick={() => {
-              window.location.href = "/duplicates";
-            }}
-          >
-            Flag Duplicate Questions
-          </button>
-          <p>To import a CSV file, select the CSV file and then click "Import CSV".</p>
-          <input type="file" accept=".csv" onChange={handleFileChange} className="select-box"/>
-          <button onClick={handleImportCSV}>Import CSV</button>
-          {csvFileName && <p>Selected file: {csvFileName}</p>}
-          <p>
-            Note: Questions must be in the correct format to be imported with a
-            CSV file.{" "}
-            <a className="silentlink" href="/quizpedia-template.csv">
-              Click here to download a CSV template
-            </a>
-            .
-          </p>
-          <hr />
+          {cookies.auth.admin ? (
+            <div>
+              <h3 style={{ textAlign: "center" }}>More Options</h3>
+              <button
+                id="data-integrity-page"
+                onClick={() => {
+                  window.location.href="/missinginfo";
+                }}
+              >
+                Fill In Missing Data
+              </button>
+              <button
+                id="data-integrity-page"
+                onClick={() => {
+                  window.location.href = "/duplicates";
+                }}
+              >
+                Flag Duplicate Questions
+              </button>
+              <p>To import a CSV file, select the CSV file and then click "Import CSV".</p>
+              <input type="file" accept=".csv" onChange={handleFileChange} className="select-box"/>
+              <button onClick={handleImportCSV}>Import CSV</button>
+              {csvFileName && <p>Selected file: {csvFileName}</p>}
+              <p>
+                Note: Questions must be in the correct format to be imported with a
+                CSV file.{" "}
+                <a className="silentlink" href="/quizpedia-template.csv">
+                  Click here to download a CSV template
+                </a>
+                .
+              </p>
+              <hr />
+            </div>
+          ) : ""}
           <p>
             You're logged in as <strong>{cookies.auth.username}</strong>.
           </p>
@@ -595,7 +599,9 @@ export function QuizBowl() {
                     <img src="/chevron.png" className="icon"/>
                   </button>
                   {/* Edit button */}
-                  <button className="action-buttons" onClick={() => { handleEditClick() }} title="Edit this question. Changes are saved to the database.">Edit</button>
+                  {cookies.auth.admin ? (
+                    <button className="action-buttons" onClick={() => { handleEditClick() }} title="Edit this question. Changes are saved to the database.">Edit</button>
+                  ) : ""}
                   {/* Remove button */}
                   {(randomQuestions.length < 12) ? (
                     <button className="action-buttons" disabled={true} title="This button is disabled because there are no other questions in the database to replace this question with.">Replace</button>
@@ -603,7 +609,9 @@ export function QuizBowl() {
                     <button className="action-buttons" onClick={() => { handleReplaceClick(question.id, index) }} title="Replace this question with a new randomly picked one.">Replace</button>
                   )}
                   {/* Delete button */}
-                  <button className="buttons-dark" onClick={() => { handleDeleteClick(question.id) }} title="Delete this question from the database and replace it with a new randomly picked one.">Delete</button>
+                  {cookies.auth.admin ? (
+                    <button className="buttons-dark" onClick={() => { handleDeleteClick(question.id) }} title="Delete this question from the database and replace it with a new randomly picked one.">Delete</button>
+                  ) : ""}
                 </div>
               </div>
             )}
