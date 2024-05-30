@@ -249,8 +249,11 @@ export function QuizBowl() {
   }
 
   // Function to handle edit button click
-  function handleEditClick() {
-    // Edit
+  function handleEditClick(qid, index) {
+    setCookie('editQuestion', {
+      index: index
+    });
+    window.location.href="/edit";
   }
 
   function handleReplaceClick(qid, index) {
@@ -600,7 +603,7 @@ export function QuizBowl() {
                   </button>
                   {/* Edit button */}
                   {cookies.auth.admin ? (
-                    <button className="action-buttons" onClick={() => { handleEditClick() }} title="Edit this question. Changes are saved to the database.">Edit</button>
+                    <button className="action-buttons" onClick={() => { handleEditClick(question.id, index) }} title="Edit this question. Changes are saved to the database.">Edit</button>
                   ) : ""}
                   {/* Remove button */}
                   {(randomQuestions.length < 12) ? (
