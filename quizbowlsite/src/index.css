@@ -184,20 +184,6 @@ a.active {
   width: 25em;
 }
 
-.editQuestionForm input {
-  font-size: 16px;
-  padding: 5px;
-  margin: 10px;
-  border-radius: 5px;
-  width: 100px;
-  background-color: white;
-  color: black;
-}
-
-.input-long {
-  width: 350px;
-}
-
 .question-holder {
   padding-left: 20px;
   padding-right: 10px;
