@@ -41,15 +41,6 @@
   padding: 10px;
 }
 
-.hiddenInput {
-  font-size: 15px;
-  padding: 5px;
-  margin: 10px;
-  border-radius: 5px;
-  background-color: white;
-  color: black;
-}
-
 .action-buttons {
   background-color: rgb(215, 63, 9);
   color: #fff;
