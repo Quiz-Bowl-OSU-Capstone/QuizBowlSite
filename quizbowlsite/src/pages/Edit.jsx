@@ -165,6 +165,12 @@ export function Edit() {
             <button id="edit-question-submit" onClick={() => { handleEdit() }}>
                 Submit Changes
             </button>
+            <button id="back" onClick={() => {
+                removeCookie("editQuestion");
+                window.location.href = "/";
+            }}>
+                Back
+            </button>
             <img src="loading.gif" className="loading-symbol" id="edit-loading"/>
         </div>
     )
