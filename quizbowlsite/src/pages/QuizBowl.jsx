@@ -13,7 +13,6 @@ import { CSVLink } from "react-csv";
 import { useCookies } from "react-cookie";
 import "../components/questioncard.css";
 import QuestionSheet from "../components/QuestionSheet.jsx";
-import AutosizeInput from 'react-input-autosize';
 
 export function QuizBowl() {
   var [filters, setFilters] = useState({
@@ -512,7 +511,7 @@ export function QuizBowl() {
               <p>
                 Note: Questions must be in the correct format to be imported with a
                 CSV file.{" "}
-                <a className="**silentlink" href="/quizpedia-template.csv">
+                <a className="silentlink" href="/quizpedia-template.csv">
                   Click here to download a CSV template
                 </a>
                 .
