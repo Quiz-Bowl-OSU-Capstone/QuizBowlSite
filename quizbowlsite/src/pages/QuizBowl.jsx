@@ -13,6 +13,7 @@ import { CSVLink } from "react-csv";
 import { useCookies } from "react-cookie";
 import "../components/questioncard.css";
 import QuestionSheet from "../components/QuestionSheet.jsx";
+import AutosizeInput from 'react-input-autosize';
 
 export function QuizBowl() {
   var [filters, setFilters] = useState({
@@ -249,8 +250,8 @@ export function QuizBowl() {
   }
 
   // Function to handle edit button click
-  function handleEditClick() {
-    // Edit
+  function handleEditClick(qid, index) {
+    window.location.href="/edit?question=" + encodeURIComponent(JSON.stringify(randomQuestions[index]));
   }
 
   function handleReplaceClick(qid, index) {
@@ -508,7 +509,7 @@ export function QuizBowl() {
               <p>
                 Note: Questions must be in the correct format to be imported with a
                 CSV file.{" "}
-                <a className="silentlink" href="/quizpedia-template.csv">
+                <a className="**silentlink" href="/quizpedia-template.csv">
                   Click here to download a CSV template
                 </a>
                 .
@@ -600,7 +601,7 @@ export function QuizBowl() {
                   </button>
                   {/* Edit button */}
                   {cookies.auth.admin ? (
-                    <button className="action-buttons" onClick={() => { handleEditClick() }} title="Edit this question. Changes are saved to the database.">Edit</button>
+                    <button className="action-buttons" onClick={() => { handleEditClick(question.id, index) }} title="Edit this question. Changes are saved to the database.">Edit</button>
                   ) : ""}
                   {/* Remove button */}
                   {(randomQuestions.length < 12) ? (

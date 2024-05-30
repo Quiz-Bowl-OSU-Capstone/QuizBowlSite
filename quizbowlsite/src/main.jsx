@@ -12,6 +12,7 @@ import App from "./Home";
 import "./index.css";
 import { ErrorPage } from "./Home";
 import { DuplicateDetect } from "./pages/DuplicateDetect";
+import { Edit } from "./pages/Edit";
 
 const router = createBrowserRouter([
   {
@@ -30,7 +31,8 @@ const router = createBrowserRouter([
       { path: "help", element: <Help /> },
       { path: "missinginfo", element: <MissingInfo /> },
       { path: "duplicates", element: <DuplicateDetect /> },
-      { path: "manageaccounts", element: <ManageAccounts />}
+      { path: "manageaccounts", element: <ManageAccounts />},
+      { path: "edit", element: <Edit />},
     ],
   },
 ]);
