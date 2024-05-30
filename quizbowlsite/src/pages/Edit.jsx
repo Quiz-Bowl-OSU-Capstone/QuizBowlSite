@@ -17,14 +17,13 @@ export function Edit() {
 
     useEffect(() => {
         const urlSearchString = window.location.search;
-        const params = new URLSearchParams(urlSearchString);
-        var question = params.get('question');
+        var index = cookies.editQuestion.index;
+        var question = localStorage.getItem("questions");
 
-        if (question != null && question != "" && cookies.auth != null && cookies.auth.uid > 0 && cookies.auth.admin) {
-            console.log("Provided question!");
+        if (question != null && question != "" && index != null && cookies.auth != null && cookies.auth.uid > 0 && cookies.auth.admin) {
+            console.log("Provided question and index: " + index);
+            question = JSON.parse(question)[index];
             try {
-                question = JSON.parse(decodeURIComponent(question));
-
                 console.log(question);
                 newQuestion.current.value = question.Question;
                 newAnswer.current.value = question.Answer;
@@ -50,18 +49,24 @@ export function Edit() {
                 }
 
                 if (question.lastusagedate != null && question.lastusagedate != "" && question.lastusagedate != "N/A") {
-                    newLastUsedDate.current.value = question.lastusedate.split("T")[0];
+                    try {
+                        var parsedDate = new Date(question.lastusagedate);
+                        newLastUsedDate.current.value = parsedDate.toISOString().split('T')[0];
+                    } catch (e) {
+                        console.log("Error parsing last usage date: " + e);
+                        console.log("This isn't really a big deal, just ignore");
+                    }
                 }
 
-                setID(question.ID);
+                setID(question.id);
             } catch (e) {
                 console.log("Error: " + e);
-                window.alert("An error occurred parsing data. To preserve data integrity, you will be redirected to the main page. No edits were made. Please try again and make sure to use the official Quizpedia website!");
-                window.location.href="/";
+                window.alert("An error occurred parsing data. To preserve data integrity, you will be redirected to the main page. No edits were made. Please try again and make sure to use the official Quizpedia website when editing!");
+                //window.location.href="/";
             }
         } else {
             console.log("No question provided!");
-            window.location.href="/";
+            //window.location.href="/";
         }
     }, []);
 
@@ -95,15 +100,43 @@ export function Edit() {
                     species: nspecies,
                     topic: ntopic,
                     resource: nresource,
+                    lastusagedate: nlastusedate,
+                    lastusageevent: nlastusageevent,
                     id: id
                 }
             ]
         }
 
-        var queryString = "https://qzblapi.azurewebsites.net/api/EditQuestions?uid=" + cookies.auth.uid + "&questions=" + encodeURIComponent(JSON.stringify(questions));
-        const response = await fetch("https://qzblapi.azurewebsites.net/api/EditQuestions?uid=" + cookies.auth.uid + "&questions=" + encodeURIComponent(JSON.stringify(questions)));
+        var queryString = "?uid=" + cookies.auth.uid + "&questions=" + encodeURIComponent(JSON.stringify(questions));
+        console.log(queryString);
+        const response = await fetch("https://qzblapi.azurewebsites.net/api/EditQuestions" + queryString);
         const data = await response.json();
         console.log(data);
+        if (data.questionsEdited && data.questionsEdited > 0) {
+            console.log("Successfully edited question!");
+
+            var index = cookies.editQuestion.index;
+            var question = localStorage.getItem("questions");
+            if (question != null && question != "" && index != null && cookies.auth != null && cookies.auth.uid > 0 && cookies.auth.admin) {
+                question = JSON.parse(question);
+
+                question[index].Question = nquestion.trim();
+                question[index].Answer = nanswer.trim();
+                question[index].Level = nlevel.trim().toUpperCase();
+                question[index].Species = nspecies.trim().toUpperCase();
+                question[index].Topic = ntopic.trim().toUpperCase();
+                question[index].Resource = nresource.trim();
+                question[index].lastusagedate = nlastusedate;
+                question[index].lastusageevent = nlastusageevent.trim();
+
+                localStorage.setItem("questions", JSON.stringify(question));
+            }
+        } else {
+            console.log("Error: " + data.Error);
+            alert("An error occurred when trying to save your edit. No changes have been made.  Try again later.");
+        }
+        removeCookie("editQuestion");
+        window.location.href = "/";
     }
 
     return (

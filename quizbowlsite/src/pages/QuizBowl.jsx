@@ -251,7 +251,10 @@ export function QuizBowl() {
 
   // Function to handle edit button click
   function handleEditClick(qid, index) {
-    window.location.href="/edit?question=" + encodeURIComponent(JSON.stringify(randomQuestions[index]));
+    setCookie('editQuestion', {
+      index: index
+    });
+    window.location.href="/edit";
   }
 
   function handleReplaceClick(qid, index) {
