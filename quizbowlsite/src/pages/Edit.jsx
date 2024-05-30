@@ -11,6 +11,8 @@ export function Edit() {
     const newLastUsedDate = React.useRef(null);
     const newLastUsedEvent = React.useRef(null);
 
+    const [id, setID] = React.useState(null);
+
     const [cookies, setCookie, removeCookie] = useCookies(["user"]);
 
     useEffect(() => {
@@ -50,6 +52,8 @@ export function Edit() {
                 if (question.lastusagedate != null && question.lastusagedate != "" && question.lastusagedate != "N/A") {
                     newLastUsedDate.current.value = question.lastusedate.split("T")[0];
                 }
+
+                setID(question.ID);
             } catch (e) {
                 console.log("Error: " + e);
                 window.alert("An error occurred parsing data. To preserve data integrity, you will be redirected to the main page. No edits were made. Please try again and make sure to use the official Quizpedia website!");
@@ -60,6 +64,47 @@ export function Edit() {
             window.location.href="/";
         }
     }, []);
+
+    async function handleEdit() {
+        var nquestion = newQuestion.current.value;
+        var nanswer = newAnswer.current.value;
+        var nlevel = newLevel.current.value;
+        var nspecies = newSpecies.current.value;
+        var ntopic = newTopic.current.value;
+        var nresource = newResource.current.value;
+        var nlastusedate = newLastUsedDate.current.value;
+        var nlastusageevent = newLastUsedEvent.current.value;
+
+        if (nquestion == "" || nanswer == "" || nlevel == "" || nspecies == "" || ntopic == "" || nresource == "") {
+            if (!confirm("You haven't filled out all fields. Are you sure you want to continue?")) {
+                console.log("User cancelled edit.");
+                return;
+            };
+        }
+        console.log("Editing question...");
+
+        document.getElementById("edit-question-submit").setAttribute("disabled", "true");
+        document.getElementById("edit-loading").style.display = "block";
+
+        var questions = {
+            questions: [
+                {
+                    question: nquestion,
+                    answer: nanswer,
+                    level: nlevel,
+                    species: nspecies,
+                    topic: ntopic,
+                    resource: nresource,
+                    id: id
+                }
+            ]
+        }
+
+        var queryString = "https://qzblapi.azurewebsites.net/api/EditQuestions?uid=" + cookies.auth.uid + "&questions=" + encodeURIComponent(JSON.stringify(questions));
+        const response = await fetch("https://qzblapi.azurewebsites.net/api/EditQuestions?uid=" + cookies.auth.uid + "&questions=" + encodeURIComponent(JSON.stringify(questions)));
+        const data = await response.json();
+        console.log(data);
+    }
 
     return (
         <div className="midbound">
@@ -84,12 +129,10 @@ export function Edit() {
                     <input type="text" id="new-last-used-event" className="select-box" placeholder="Last Event Used At" ref={newLastUsedEvent}/>
                 </div>
             </div>
-
-            <p>Clicking "Submit Changes" will save these changes to the database and bring you back to the main screen.</p>
-            <button id="fetch-duplicates" onClick={() => { handleEdit() }}>
+            <button id="edit-question-submit" onClick={() => { handleEdit() }}>
                 Submit Changes
             </button>
-            <img src="loading.gif" className="loading-symbol" id="duplicate-loading"/>
+            <img src="loading.gif" className="loading-symbol" id="edit-loading"/>
         </div>
     )
 }
