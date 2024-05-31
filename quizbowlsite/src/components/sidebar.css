@@ -1,0 +1,23 @@
+.sidebar {
+  background-color: #444444;
+  color: white;
+  padding: 10px;
+  height: fill-available;
+  min-height: calc(100vh - 90px);
+  overflow: auto;
+}
+
+.sidebar ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.sidebar a {
+  text-decoration: none;
+  cursor: default;
+  color: rgb(245, 83, 29);
+}
+
+.sidebar a:hover {
+  color: white;
+}

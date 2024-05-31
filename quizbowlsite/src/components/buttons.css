@@ -1,0 +1,28 @@
+button {
+  font-family: "Exo", sans-serif;
+  font-size: 16px;
+  background-color: white;
+  border: 1px solid black;
+  color: black;
+  border-radius: 5px;
+  margin: 5px;
+  padding: 10px;
+}
+
+button:disabled {
+  background-color: #bbbbbb;
+  color: #888888;
+}
+
+button:active {
+  background-color: #bbbbbb;
+}
+
+.mainbutton {
+  min-width: 100px;
+}
+
+.pdfbutton {
+  margin: 5px;
+  padding: 0px;
+}

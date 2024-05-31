@@ -10,6 +10,14 @@ import { ManageAccounts } from "./pages/ManageAccounts";
 import { MissingInfo } from "./pages/MissingInfo";
 import App from "./Home";
 import "./index.css";
+import "../src/components/global.css";
+import "../src/components/buttons.css";
+import "../src/components/navbar.css";
+import "../src/components/sidebar.css";
+import "../src/components/dialog.css";
+import "../src/components/form-elements.css";
+import "../src/components/layout.css";
+import "../src/components/misc.css";
 import { ErrorPage } from "./Home";
 import { DuplicateDetect } from "./pages/DuplicateDetect";
 import { Edit } from "./pages/Edit";
@@ -31,8 +39,8 @@ const router = createBrowserRouter([
       { path: "help", element: <Help /> },
       { path: "missinginfo", element: <MissingInfo /> },
       { path: "duplicates", element: <DuplicateDetect /> },
-      { path: "manageaccounts", element: <ManageAccounts />},
-      { path: "edit", element: <Edit />},
+      { path: "manageaccounts", element: <ManageAccounts /> },
+      { path: "edit", element: <Edit /> },
     ],
   },
 ]);

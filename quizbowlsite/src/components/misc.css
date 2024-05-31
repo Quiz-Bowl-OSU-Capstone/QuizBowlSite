@@ -1,0 +1,52 @@
+.about-div {
+  padding: 10px;
+}
+
+.filter-box {
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(210, 11, 11, 0.1);
+}
+
+.filter-box h3 {
+  margin-top: 0;
+}
+
+.filter-box li {
+  padding: 5px 0;
+}
+
+.filters-menu {
+  padding: 50px;
+  color: black;
+  background-color: white;
+}
+
+.icon {
+  width: 10px;
+}
+
+.icon-rotated {
+  width: 10px;
+  transform: rotate(180deg);
+}
+
+.marketing {
+  width: calc(100% - 20px);
+  border: 2px solid #444444;
+  border-radius: 10px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.midbound {
+  text-align: center;
+  padding: 20px 50px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.question-individual {
+  padding-bottom: 16px;
+  line-height: 1.5;
+}
