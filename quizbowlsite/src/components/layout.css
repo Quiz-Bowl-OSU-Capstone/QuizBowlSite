@@ -1,0 +1,35 @@
+.main-holder {
+  display: flex;
+  justify-content: center;
+}
+
+.content-holder {
+  display: flex;
+  justify-content: left;
+  width: 25em;
+}
+
+.question-holder {
+  padding-left: 20px;
+  padding-right: 10px;
+  width: calc(100% - 25em);
+  height: fit-content;
+}
+
+.loading-symbol {
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  display: none;
+  height: 50px;
+}
+
+.row {
+  display: flex;
+}
+
+.column {
+  flex: 50%;
+  padding: 10px;
+}

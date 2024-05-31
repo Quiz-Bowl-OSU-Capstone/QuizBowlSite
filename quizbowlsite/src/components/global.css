@@ -1,0 +1,17 @@
+body {
+  margin: 0;
+  background-color: rgb(227, 220, 218);
+  font-family: "Exo", sans-serif;
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+hr {
+  margin: 20px;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.example {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}

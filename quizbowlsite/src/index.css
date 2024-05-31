@@ -1,6 +1,7 @@
 @font-face {
   font-family: "Exo";
-  src: url("fonts/exo.ttf"), url("fonts/exo-bold.ttf"), url("fonts/exo-italic.ttf");
+  src: url("fonts/exo.ttf"), url("fonts/exo-bold.ttf"),
+    url("fonts/exo-italic.ttf");
   font-weight: normal;
   font-style: normal, bold, italic;
 }
@@ -9,8 +10,8 @@ body {
   margin: 0;
   background-color: rgb(227, 220, 218);
   font-family: "Exo", sans-serif;
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
 }
 
 hr {
@@ -38,18 +39,18 @@ button {
 }
 
 button:disabled {
-  background-color: #BBBBBB;
+  background-color: #bbbbbb;
   color: #888888;
 }
 
 button:active {
-  background-color: #BBBBBB;
+  background-color: #bbbbbb;
 }
 
 /* Hide scrollbar for IE, Edge and Firefox */
 .example {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
 }
 
 .about-div {
@@ -97,7 +98,7 @@ a.active {
   height: fit-content;
   justify-content: center;
   align-items: center;
-  background-color: #EEEEEE;
+  background-color: #eeeeee;
 }
 
 .dialog-div {
@@ -152,7 +153,7 @@ a.active {
 .sidebar a {
   text-decoration: none;
   cursor: default;
-  color: rgb(245, 83, 29)
+  color: rgb(245, 83, 29);
 }
 
 .sidebar a:hover {
@@ -212,7 +213,7 @@ a.active {
   font-size: 14px;
 }
 
-.select-box[type=checkbox] {
+.select-box[type="checkbox"] {
   width: 25px;
   height: 25px;
 }
@@ -233,10 +234,10 @@ a.active {
   height: fit-content;
   justify-content: center;
   align-items: center;
-  background-color: #EEEEEE;
+  background-color: #eeeeee;
 }
 
-.dialog-short div{
+.dialog-short div {
   width: 30%;
   margin: auto;
 }
