@@ -9,7 +9,7 @@ import { Login } from "./pages/Login";
 import { ManageAccounts } from "./pages/ManageAccounts";
 import { MissingInfo } from "./pages/MissingInfo";
 import App from "./Home";
-import "../src/components/fonts.css";
+import "./index.css";
 import "../src/components/global.css";
 import "../src/components/buttons.css";
 import "../src/components/navbar.css";
