@@ -1,5 +1,6 @@
 
 export function Contact() {
+  // Styling for the contact information is somewhat contained here.
   const contactStyle = {
     display: 'flex',
     flexDirection: 'row',
@@ -25,6 +26,7 @@ export function Contact() {
     marginTop: '20px',
   };
 
+  // All stored here, no dynamic updates needed.
   return (
     <div>
       

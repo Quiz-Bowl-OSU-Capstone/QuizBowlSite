@@ -1,15 +1,20 @@
 import { useCookies } from "react-cookie";
 
 export function Login() {
+  // Cookies access
   const [cookies, setCookie, removeCookie] = useCookies(["user"]);
+
+  // Whether the login is loading. This is used to determine if the "it's been a while" dialog should show.
   var loading = false;
 
+  // If the user presses enter, treat it as if they clicked the login button.
   var handleEnterKey = (event) => {
     if (event.key === "Enter") {
       handleLogin();
     }
   }
 
+  // Handle the login process.
   async function handleLogin() {
     document.getElementById("login-button").setAttribute("disabled", "true");
     document.getElementById("username").setAttribute("disabled", "true");
@@ -17,11 +22,13 @@ export function Login() {
     loading = true;
     document.getElementById("login-loading").style.display = "flex";
     setTimeout(() => {
+      // Show the "it's been awhile" dialog if the login is still loading after 4 seconds.
       if (loading) {
         document.getElementById("login-extra-dialog").style.display = "block";
       } 
     }, 4000);
     try {
+      // The actual login happens here.
       var username = document.getElementById("username").value;
       var password = document.getElementById("password").value;
       var params = "?username=" + username + "&password=" + password;
@@ -34,7 +41,8 @@ export function Login() {
         throw new Error("Failed to fetch user details");
       }
       const data = await response.json();
-      if (data.uid > 0) {
+      if (data.uid > 0) { // Successfully found account.
+        // Setting an auth cookie.
         setCookie('auth', {
           uid: data.uid,
           username: data.username,
@@ -42,7 +50,7 @@ export function Login() {
         });
         loading = false;
         console.log("Logged in as", data.username);
-        window.location.href = "/";
+        window.location.href = "/"; // Returns the user to the homepage on successful login.
       } else {
         removeCookie('auth');
         loading = false;

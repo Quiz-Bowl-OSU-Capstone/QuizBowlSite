@@ -2,12 +2,18 @@ import React, { useState, useEffect, useRef } from "react";
 import { useCookies } from "react-cookie";
 
 export function ManageAccounts() { 
+    // Cookie storage.
     const [cookies, setCookie, removeCookie] = useCookies(["user"]);
+
+    // Accounts data and selected accounts.
     const [accounts, setAccounts] = React.useState([]);
     const [selectedAccount, setSelectedAccount] = useState(null);
+
+    // Account actions for reset/delete.
     const [actionableAccount, setActionableAccount] = useState(null);
     const [action, setAction] = useState(null);
 
+    // This function handles the account click functionality, similar to how questions can be clicked on the main page.
     var handleAccountClick = (username) => {
         if (selectedAccount == username) {
             setSelectedAccount(null);
@@ -16,24 +22,28 @@ export function ManageAccounts() {
         }
     }
 
+    // This function handles the Enter Key functionality for the password input on the main page.
     var handleEnterKey = (event) => {
         if (event.key === "Enter") {
             getAccounts(document.getElementById("password").value);
         }
     }
 
+    // This function handles the Enter Key functionality for the password confirmation popup.
     var handleEnterKeyPopup = (event) => {
         if (event.key === "Enter") {
             handlePopupClose();
         }
     }
 
+    // This function handles the Enter Key functionality for creating an account.
     var handleEnterKeyCreate = (event) => {
         if (event.key === "Enter") {
             handleCreateAccount(document.getElementById("password").value);
         }
     }
 
+    // This function gets the accounts from the database.
     async function getAccounts(pass) {
         try {
             document.getElementById("login-loading").style.display = "flex";
@@ -66,6 +76,7 @@ export function ManageAccounts() {
         setAccounts(accounts);
     }
 
+    // This function creates a new account.
     async function handleCreateAccount(currentpass) {
         document.getElementById("newusername").setAttribute("disabled", "true");
         document.getElementById("newpassword").setAttribute("disabled", "true");
@@ -107,11 +118,13 @@ export function ManageAccounts() {
         document.getElementById("button-create-account").removeAttribute("disabled");
     }
 
+    // This function handles the password confirmation for account actions.
     async function handlePasswordConfirm(username, action) {
         setAction(action);
         setActionableAccount(username);
     }
 
+    // This function handles the closing of the popup dialog for password confirmation.
     function handlePopupClose() {
         document.getElementById("popup-password").setAttribute("disabled", "true");
         document.getElementById("button-reset-delete").setAttribute("disabled", "true");
@@ -129,6 +142,7 @@ export function ManageAccounts() {
         }
     }
 
+    // This function resets the password for an account.
     async function handleResetPassword(username, pass) {
         var params = "?uid=" + cookies.auth.uid + "&currentpass=" + encodeURIComponent(pass) + "&acctusername=" + username;
         var newpass = prompt("Did you want to set a specific password for this account? If so, you can enter that here. Otherwise, leave this blank to generate a random password. Clicking 'Cancel' will cancel the password reset.")
@@ -160,6 +174,7 @@ export function ManageAccounts() {
         }
     }
 
+    // This function deletes an account from the database.
     async function handleAccountDelete(username, pass) {
         var params = "?uid=" + cookies.auth.uid + "&currentpass=" + encodeURIComponent(pass) + "&username=" + username;
 
@@ -177,6 +192,7 @@ export function ManageAccounts() {
         getAccounts(pass);
     }
 
+    // This is the account display function. It shows the accounts in a list.
     function AccountDisplay({}) {
         if (accounts.length == 0) {
             return (
@@ -257,6 +273,7 @@ export function ManageAccounts() {
         }
     }
 
+    // This function is the main function that renders most of the page. If the user isn't logged in or an admin, they are redirected away after a few moments.
     function Manage({ user }) {
         if (user != undefined && user.uid > 0 && user.admin) {
             return (
@@ -281,6 +298,7 @@ export function ManageAccounts() {
         }
     }
 
+    // The entire page is rendered here.
     return (
         <Manage user={cookies.auth}/>
     );

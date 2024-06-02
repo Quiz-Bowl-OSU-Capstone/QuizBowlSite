@@ -15,23 +15,29 @@ import "../components/questioncard.css";
 import QuestionSheet from "../components/QuestionSheet.jsx";
 
 export function QuizBowl() {
+  // Variables that store available filter options. These are fetched from the backend API.
   var [filters, setFilters] = useState({
     species: ["Loading..."],
     resource: ["Loading..."],
     level: ["Loading..."],
     topic: ["Loading..."],
   });
+
+  // Variables that store authentication and editQuestion data.
   const [cookies, setCookie, removeCookie] = useCookies(["user"]);
 
+  // Variables that store the list of questions and the currently selected question.
   const [randomQuestions, setRandomQuestions] = useState([]);
   const [selectedQuestion, setSelectedQuestion] = useState(null);
 
+  // Variables that store the current filter settings.
   const [levelFilter, setLevelFilter] = useState("nofilter");
   const [speciesFilter, setSpeciesFilter] = useState("nofilter");
   const [resourceFilter, setResourceFilter] = useState("nofilter");
   const [topicFilter, setTopicFilter] = useState("nofilter");
   const [savedDate, setSavedDate] = useState("");
 
+  // Variables that store the CSV file and its name for import.
   const [csvFile, setCsvFile] = useState(null);
   const [csvFileName, setCsvFileName] = useState("");
 
@@ -112,6 +118,7 @@ export function QuizBowl() {
   async function fetchSingleQuestion() {
     var params = "?uid=" + cookies.auth.uid;
 
+    // Using cached filters if available.
     if (localStorage.getItem("level")) {
       params += "&level=" + localStorage.getItem("level");
     }
@@ -138,6 +145,7 @@ export function QuizBowl() {
     randomQuestions.forEach((question) => { ids.push(question.id) });
     params += "&exclude=" + encodeURIComponent(JSON.stringify(ids));
 
+    // Fetch the question using the API.
     try {
       const response = await fetch(
         "https://qzblapi.azurewebsites.net/api/PickRandomQuestions" + params
@@ -156,6 +164,7 @@ export function QuizBowl() {
     }
   }
 
+  // Deletes a question from the database.
   async function deleteQuestion(qid) {
     var deleteURL = "https://qzblapi.azurewebsites.net/api/RemoveQuestions?uid=" + cookies.auth.uid + "&ids=" + encodeURIComponent(JSON.stringify([qid]));
     const response = await fetch(deleteURL);
@@ -165,6 +174,7 @@ export function QuizBowl() {
     data = await response.json();
   }
 
+  // Handles the click event for the "Generate Questions" button by generating the parameter string and then calling the fetchRandomQuestions function.
   async function handleClick() {
     var params = "";
 
@@ -211,9 +221,11 @@ export function QuizBowl() {
       localStorage.removeItem("date");
     }
 
+    // Calls the randomquestion function with the parameter string generated here.
     fetchRandomQuestions(params);
   }
 
+  // Handles clicking on a question card and selecting it.
   function handleQuestionClick(question) {
     setSelectedQuestion((prevQuestion) => {
       if (prevQuestion && prevQuestion.id === question.id) {
@@ -224,6 +236,7 @@ export function QuizBowl() {
     });
   }
 
+  // Function to handle moving questions up or down in the list.
   function handleMove(moveDir, index, qid) {
     if (moveDir === "up") {
       if (index === 0) {
@@ -248,14 +261,17 @@ export function QuizBowl() {
     }
   }
 
-  // Function to handle edit button click
+  // Function to handle clicking the Edit button. Only works if admin user logged in.
   function handleEditClick(qid, index) {
-    setCookie('editQuestion', {
-      index: index
-    });
-    window.location.href="/edit";
+    if (cookies.auth.uid > 0 && cookies.auth.admin) {
+      setCookie('editQuestion', {
+        index: index
+      });
+      window.location.href="/edit";
+    }
   }
 
+  // Function to handle replace button. Replaces a question with a new one from the database.
   function handleReplaceClick(qid, index) {
     if (window.confirm("By clicking OK, you are going to replace this question with a new randomly-selected question from the database. Are you sure?")) {
       console.log("Confirmed replace operation with ID" + qid);
@@ -346,7 +362,7 @@ export function QuizBowl() {
     }
   }
 
-  // Displays account status and filtering options in the sidebar
+  // Displays account status and filtering options in the sidebar if logged in. Otherwise show the user is not logged in.
   function AccountStatus({ user, filters }) {
     if (user != undefined && user.uid > 0) {
       return (
@@ -564,7 +580,7 @@ export function QuizBowl() {
     }
   }
 
-  // Renders a display of questions, handling interactions like clicking on a question card
+  // Renders a display of questions, handling interactions like clicking on a question card.
   function QuestionDisplay({}) {
     return (
       <div className="question-holder">
@@ -575,7 +591,7 @@ export function QuizBowl() {
             onClick={() => handleQuestionClick(question)}
           >
             <p>
-              <strong>{question.Question}</strong>
+              <strong>{index+1}: {question.Question}</strong>
               <br />
               Answer: {question.Answer}
               <br />
@@ -619,7 +635,7 @@ export function QuizBowl() {
               </div>
             )}
           </div>
-        ))}
+        ))} {/* If the user isn't logged in, show a landing page! */}
         {(cookies.auth == undefined) ? (
           <div>
             <div class="row">
@@ -753,11 +769,12 @@ export function QuizBowl() {
         console.error("Error fetching filters:", error);
       }
     }
-
+    // Fetches all distinct filters on loading, if logged in.
     try {
       if (cookies.auth.uid > 0) {
         fetchFilters();
 
+        // If there are cached questions/filters settings, load them as well.
         if (
           localStorage.questions &&
           localStorage.lastuser &&
