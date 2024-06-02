@@ -30,6 +30,7 @@ export function QuizBowl() {
   const [speciesFilter, setSpeciesFilter] = useState("nofilter");
   const [resourceFilter, setResourceFilter] = useState("nofilter");
   const [topicFilter, setTopicFilter] = useState("nofilter");
+  const [savedDate, setSavedDate] = useState("");
 
   function handleExportCSV() {
     const csvData = randomQuestions.map((question) => ({
@@ -42,6 +43,25 @@ export function QuizBowl() {
     }));
 
     return csvData;
+  }
+
+  function clearQuestions() {
+    setRandomQuestions([]);
+
+    localStorage.removeItem("questions");
+    localStorage.removeItem("lastuser");
+    localStorage.removeItem("lastfetched");
+    localStorage.removeItem("level");
+    localStorage.removeItem("species");
+    localStorage.removeItem("resource");
+    localStorage.removeItem("topic");
+    localStorage.removeItem("lastusedbefore");
+
+    setLevelFilter("nofilter");
+    setSpeciesFilter("nofilter");
+    setResourceFilter("nofilter");
+    setTopicFilter("nofilter");
+    setSavedDate("");
   }
 
   async function fetchSingleQuestion() {
@@ -61,6 +81,10 @@ export function QuizBowl() {
 
     if (localStorage.getItem("topic")) {
       params += "&topic=" + localStorage.getItem("topic");
+    }
+  
+    if (localStorage.getItem("date")) {
+      params += "&date=" + encodeURIComponent(date);
     }
 
     params += "&amt=1";
@@ -134,22 +158,13 @@ export function QuizBowl() {
     }
 
     if (document.getElementById("last-used-before-date").value) {
-      params +=
-        "&lastusedbefore=" +
-        encodeURIComponent(
-          new Date(
-            document.getElementById("last-used-before-date").value
-          ).toJSON()
-        );
-      localStorage.setItem(
-        "lastusedbefore",
-        document.getElementById("last-used-before-date").value
-      );
-    } else {
-      localStorage.removeItem("lastusedbefore");
-    }
+      var date = new Date(document.getElementById("last-used-before-date").value).toISOString().substring(0, 10);
 
-    console.log("Params: ", params);
+      params += "&date=" + encodeURIComponent(date);
+      localStorage.setItem("date", date);
+    } else {
+      localStorage.removeItem("date");
+    }
 
     fetchRandomQuestions(params);
   }
@@ -164,12 +179,36 @@ export function QuizBowl() {
     });
   }
 
+  function handleMove(moveDir, index, qid) {
+    if (moveDir === "up") {
+      if (index === 0) {
+        return;
+      }
+      const newQuestions = [...randomQuestions];
+      const temp = newQuestions[index];
+      newQuestions[index] = newQuestions[index - 1];
+      newQuestions[index - 1] = temp;
+      setRandomQuestions(newQuestions);
+      setSelectedQuestion(qid);
+    } else if (moveDir === "down") {
+      if (index === randomQuestions.length - 1) {
+        return;
+      }
+      const newQuestions = [...randomQuestions];
+      const temp = newQuestions[index];
+      newQuestions[index] = newQuestions[index + 1];
+      newQuestions[index + 1] = temp;
+      setRandomQuestions(newQuestions);
+      setSelectedQuestion(qid);
+    }
+  }
+
   // Function to handle edit button click
   function handleEditClick() {
     // Edit
   }
 
-  function handleReplaceClick(qid) {
+  function handleReplaceClick(qid, index) {
     if (window.confirm("By clicking OK, you are going to replace this question with a new randomly-selected question from the database. Are you sure?")) {
       console.log("Confirmed replace operation with ID" + qid);
 
@@ -177,9 +216,10 @@ export function QuizBowl() {
       fetchSingleQuestion().then((newQuestion) => {
         if (newQuestion != null) {
           var questions = randomQuestions.filter((question) => question.id != qid);
-          questions = questions.concat(newQuestion);
+          questions.splice(index, 0, newQuestion);
           
           setRandomQuestions(questions);
+          setSelectedQuestion(newQuestion.id);
           localStorage.setItem("questions", JSON.stringify(questions));
           localStorage.setItem("lastuser", cookies.auth.uid);
           localStorage.setItem("lastfetched", new Date().getTime() / 1000);
@@ -201,12 +241,13 @@ export function QuizBowl() {
         var questions = randomQuestions.filter((question) => question.id != qid);
         
         if (newQuestion != null) {
-          questions = questions.concat(newQuestion);
+          questions.splice(index, 0, newQuestion);
         } else {
           window.alert("Failed to replace question. This could be because there are not enough questions in the database with similar filters, or because of a network error.")  
         }
 
         setRandomQuestions(questions);
+        setSelectedQuestion(newQuestion.id);
         localStorage.setItem("questions", JSON.stringify(questions));
         localStorage.setItem("lastuser", cookies.auth.uid);
         localStorage.setItem("lastfetched", new Date().getTime() / 1000);
@@ -259,7 +300,7 @@ export function QuizBowl() {
     if (user != undefined && user.uid > 0) {
       return (
         <div>
-          <h3 style={{ textAlign: "center" }}>Filters</h3>
+          <h3 style={{ textAlign: "center" }}>Instructions</h3>
           <p>
             Use drop down boxes and date selectors to enable or disable filters.
             Click the "Generate Questions" button to get a list of questions
@@ -347,12 +388,17 @@ export function QuizBowl() {
                     type="date"
                     className="select-box"
                     id="last-used-before-date"
+                    value={savedDate}
+                    onChange={(e) => setSavedDate(e.target.value)}
                   />
                 </label>
               </li>
             </ul>
           </form>
-          <button id="gen-questions" onClick={handleClick}>
+          <button className="mainbutton" id="clear-questions" onClick={clearQuestions}>
+            Clear
+          </button>
+          <button className="mainbutton" id="gen-questions" onClick={handleClick}>
             Generate Questions
           </button>
           <button
@@ -383,15 +429,14 @@ export function QuizBowl() {
                 padding: "10px",
               }}
             >
-              Download PDF
+              Download as PDF
             </PDFDownloadLink>
           </button>
           <button id="gen-csv" onClick={handleDownloadCSV}>
-            Download CSV
+            Download as CSV
           </button>
           <hr />
-          <h3 style={{ textAlign: "center" }}>Help Improve Quizpedia</h3>
-          <p>Have some spare time or want to help? Quizpedia could use it!</p>
+          <h3 style={{ textAlign: "center" }}>More Options</h3>
           <button
             id="data-integrity-page"
             onClick={() => {
@@ -400,8 +445,24 @@ export function QuizBowl() {
               );
             }}
           >
-            Help Improve Quizpedia
+            Fill In Missing Data
           </button>
+          <button
+            id="data-integrity-page"
+            onClick={() => {
+              window.location.href = "/duplicates";
+            }}
+          >
+            Flag Duplicate Questions
+          </button>
+          <button id="csv-import" onClick={() => {
+              window.alert(
+                "We appreciate it, but this feature isn't built yet!"
+              );
+            }}>
+            Import Questions from CSV
+          </button>
+          <p>Note: Questions must be in the correct format to be imported with a CSV file. <a className="silentlink" href="/quizpedia-template.csv">Click here to download a CSV template</a>.</p>
           <hr />
           <p>
             You're logged in as <strong>{cookies.auth.username}</strong>.
@@ -412,6 +473,7 @@ export function QuizBowl() {
               removeCookie("auth");
               window.location.reload();
             }}
+            className="mainbutton"
           >
             Log out
           </button>
@@ -427,6 +489,7 @@ export function QuizBowl() {
             onClick={() => {
               window.location.href = "/login";
             }}
+            className="mainbutton"
           >
             Login
           </button>
@@ -465,13 +528,19 @@ export function QuizBowl() {
                 </p>
                 <img src="loading.gif" alt="Loading..." id="q-operation-loading" className="loading-symbol" />
                 <div>
+                  <button className="action-buttons-icon" onClick={() => { handleMove("up", index, question.id) }}>
+                    <img src="/chevron.png" className="icon-rotated"/>
+                  </button>
+                  <button className="action-buttons-icon" onClick={() => { handleMove("down", index, question.id) }}>
+                    <img src="/chevron.png" className="icon"/>
+                  </button>
                   {/* Edit button */}
                   <button className="action-buttons" onClick={() => { handleEditClick() }} title="Edit this question. Changes are saved to the database.">Edit</button>
                   {/* Remove button */}
                   {(randomQuestions.length < 12) ? (
                     <button className="action-buttons" disabled={true} title="This button is disabled because there are no other questions in the database to replace this question with.">Replace</button>
                   ): (
-                    <button className="action-buttons" onClick={() => { handleReplaceClick(question.id) }} title="Replace this question with a new randomly picked one.">Replace</button>
+                    <button className="action-buttons" onClick={() => { handleReplaceClick(question.id, index) }} title="Replace this question with a new randomly picked one.">Replace</button>
                   )}
                   {/* Delete button */}
                   <button className="buttons-dark" onClick={() => { handleDeleteClick(question.id) }} title="Delete this question from the database and replace it with a new randomly picked one.">Delete</button>
@@ -480,9 +549,51 @@ export function QuizBowl() {
             )}
           </div>
         ))}
-        {(randomQuestions.length == 0 && cookies.auth != undefined) ? (
-          <p style={{"padding":"20px"}}>No questions are currently being displayed. This could be because you just signed in, or because no questions matched your filters. Try again with different or fewer filters enabled if this is the case.</p>
-        ): ""}
+        {(cookies.auth == undefined) ? (
+          <div>
+            <div class="row">
+              <div class="column">
+                <h1>Welcome to Quizpedia!</h1>
+                <img src="quizpediademo.jpg" alt="Quizpedia Demo" className="marketing" />
+                <p>Quizpedia automates question generation, making it a snap to randomly pick questions out. It even includes the ability to filter them by multiple data points, track when each question was last used, and easily correct questions with missing data.
+                Quizpedia also allows quizmasters to import and export questions as CSV or PDF files, which allows them to easily print out, share, or add questions to the database without having to manually transfer generated questions to another sheet. In fact, Quizpedia allows questions to be added either from its web interface or from an imported sheet of questions!</p>
+                <h3>Why use Quizpedia?</h3>
+                <p>Quizmasters at Oregon State University’s 4-H youth development program previously employed an Excel spreadsheet to store a massive amount of questions that were used for the quiz bowl events they put on. This sheet was difficult to navigate, and required a person to manually go through and pick out questions to ask at these quiz bowl events. As a result, it was time consuming to prepare for these events. The sheet also often contained duplicate or incorrect information, and it was difficult to truly randomize data from the table.</p>
+                <p>Quizpedia automates question storage, retrival, randomization, and cataloging. Questions can be shared more easily and the database keeps a central record of which questions were used and for which events. Quizpedia also can be accessed from anywhere, making it easier to use it on the go and with different users. Quizpedia is also designed to be lightweight, low-cost, and fit the needs of 4-H quizmasters, so it is customized to the needs of the program.</p>
+                <h3>How does it work?</h3>
+                <p>Quizpedia is built on the Azure Cloud Platform. Our goals were to design a system that is low-cost, easy to maintain and reliable, so we chose to use a serverless architecture in development. Quizpedia is comprised of three separate parts - the website itself, a central API, and the database which stores the question data.</p>              
+              </div>
+              <div class="column">
+                <h3>How do I use Quizpedia?</h3>
+                <p>Users will need to log into the website using the login button on the top left side of the page. If you need an account, please email Candi Bothum at bothumca@oregonstate.edu</p>
+                <p>Once logged in, the left sidebar shows options for filtering, retrieving, and downloading questions. Users can select filters to narrow down the questions they want to generate. Clicking the "Generate Questions" button will fetch a list of questions based on the filters selected. From there, users can can view the questions on the page and download them as a PDF or CSV file.</p>
+                <p>The left sidebar will also show options for users to help improve the quality of question data, by filling missing data fields or flagging duplicate questions. If you have spare time and want to help the project in some way, this is a good way to do so!</p>
+                <h3>I need help!</h3>
+                <p>As our project is still under development currently, Aura Fairchild is the primary contact for Quizpedia (fairchau@oregonstate.edu). When emailing, please include your name and a detailed description of what you were trying to do, and the error message (if any). For help inquiries after June 7th, please reach out to our project partner for Quizpedia, Candi Bothum, at bothumca@oregonstate.edu.</p>
+                <h3>More Info / Useful Links</h3>
+                <ul>
+                  <li><a href="https://github.com/Quiz-Bowl-OSU-Capstone/Quiz-Bowl">Quizpedia API Github Repository (for codebase and technical documentation)</a></li>
+                  <li><a href="https://github.com/Quiz-Bowl-OSU-Capstone/QuizBowlSite">Quizpedia Website Github Repository (for codebase and technical documentation)</a></li>
+                </ul>
+                <h4>Authors</h4>
+                <ul>
+                  <li>Aura Fairchild</li>
+                  <li>Daksh Viradiya</li>
+                  <li>Jay Shah</li>
+                  <li>Ricardo Gonzalez</li>
+                </ul>
+                <h4>Contributors</h4>
+                <ul>
+                  <li>Candi Bothum - Project Partner</li>
+                  <li>Lucas Turpin - IT Contact</li>
+                  <li>Kirsten Winters - Capstone Professor</li>
+                  <li>Alex Ulbrich - Capstone Professor</li>
+                </ul>
+              </div>
+            </div>
+            <h5>Launched in Beaver Nation on June 7th.</h5>
+          </div>
+        ): ("")}
       </div>
     );
   }
@@ -602,6 +713,11 @@ export function QuizBowl() {
           if (localStorage.topic) {
             console.log("Setting topic to", localStorage.topic);
             setTopicFilter(localStorage.topic);
+          }
+
+          if (localStorage.date) {
+            console.log("Setting date to", localStorage.date);
+            setSavedDate(localStorage.date);
           }
         } else {
           localStorage.clear();
