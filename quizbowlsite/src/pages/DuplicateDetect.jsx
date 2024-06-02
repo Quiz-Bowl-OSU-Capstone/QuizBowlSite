@@ -2,10 +2,12 @@ import React, { useState, useEffect, useRef } from "react";
 import { useCookies } from "react-cookie";
 
 export function DuplicateDetect() { 
+    // Question storage and cookie access.
     const [randomQuestions, setRandomQuestions] = React.useState([]);
     const [cookies, setCookie, removeCookie] = useCookies(["user"]);
     const [autocompleteRender, setAutoCompletedRender] = React.useState(false);
 
+    // Refs for the input fields.
     const newQuestion = React.useRef(null);
     const newAnswer = React.useRef(null);
     const newLevel = React.useRef(null);
@@ -15,6 +17,7 @@ export function DuplicateDetect() {
     const newLastUsedDate = React.useRef(null);
     const newLastUsedEvent = React.useRef(null);
 
+    // The function to remove duplicates and replace them with a new question.
     async function removeDuplicates() {
         if (newLevel.current.value == "" || newTopic.current.value == "" || newSpecies.current.value == "" || newResource.current.value == "" || newQuestion.current.value == "" || newAnswer.current.value == "") {
             if (!window.confirm("You have left some fields blank. Are you sure you want to continue?")) {
@@ -60,6 +63,7 @@ export function DuplicateDetect() {
         }
     }
 
+    // Fetches a set of potential duplicate questions.
     async function fetchQuestions() {
         try {
             document.getElementById("duplicate-loading").style.display = "flex";
@@ -116,6 +120,7 @@ export function DuplicateDetect() {
         }
     }
 
+    // Autofill the fields with the most common values.
     function autocomplete(questions) {
         console.log("Attempting to auto-fill fields.");
 
@@ -242,6 +247,7 @@ export function DuplicateDetect() {
         }
     }
     
+    // Display the questions. Uses a similar question card format as the main page.
     function QuestionDisplay({}) {
         return (
             <div>
@@ -274,6 +280,7 @@ export function DuplicateDetect() {
         )
     }
 
+    // The main function for the DuplicateDetect page.
     function FlagDuplicates({ user }) {
         if (user != undefined && user.uid > 0 && user.admin) {
             return (
@@ -351,6 +358,7 @@ export function DuplicateDetect() {
         }
     }
 
+    // Return the JSX for the DuplicateDetect page.
     return (
         <FlagDuplicates user={cookies.auth}/>
     );

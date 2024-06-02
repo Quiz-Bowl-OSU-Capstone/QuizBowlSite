@@ -11,15 +11,18 @@ export function Edit() {
     const newLastUsedDate = React.useRef(null);
     const newLastUsedEvent = React.useRef(null);
 
+    // The id of the question being edited.
     const [id, setID] = React.useState(null);
 
+    // Cookies access.
     const [cookies, setCookie, removeCookie] = useCookies(["user"]);
 
     useEffect(() => {
-        const urlSearchString = window.location.search;
+        // Check if the user is logged in and retrieve the question to edit from localStorage.
         var index = cookies.editQuestion.index;
         var question = localStorage.getItem("questions");
 
+        // If the user is logged in and the question is found, populate the fields with the question's data.
         if (question != null && question != "" && index != null && cookies.auth != null && cookies.auth.uid > 0 && cookies.auth.admin) {
             console.log("Provided question and index: " + index);
             question = JSON.parse(question)[index];
@@ -61,15 +64,16 @@ export function Edit() {
                 setID(question.id);
             } catch (e) {
                 console.log("Error: " + e);
-                window.alert("An error occurred parsing data. To preserve data integrity, you will be redirected to the main page. No edits were made. Please try again and make sure to use the official Quizpedia website when editing!");
-                //window.location.href="/";
+                window.alert("An error occurred parsing data. To preserve data integrity, you will be redirected to the main page. No edits were made. Please try again later and make sure to use the official Quizpedia website when editing!");
+                window.location.href="/";
             }
         } else {
             console.log("No question provided!");
-            //window.location.href="/";
+            window.location.href="/";
         }
     }, []);
 
+    // Handle the edit process to save the changes to the database.
     async function handleEdit() {
         var nquestion = newQuestion.current.value;
         var nanswer = newAnswer.current.value;
@@ -80,12 +84,14 @@ export function Edit() {
         var nlastusedate = newLastUsedDate.current.value;
         var nlastusageevent = newLastUsedEvent.current.value;
 
+        // Check if the user has filled out all fields and if not, ask for confirmation.
         if (nquestion == "" || nanswer == "" || nlevel == "" || nspecies == "" || ntopic == "" || nresource == "") {
             if (!confirm("You haven't filled out all fields. Are you sure you want to continue?")) {
                 console.log("User cancelled edit.");
                 return;
             };
         }
+
         console.log("Editing question...");
 
         document.getElementById("edit-question-submit").setAttribute("disabled", "true");
@@ -108,10 +114,10 @@ export function Edit() {
         }
 
         var queryString = "?uid=" + cookies.auth.uid + "&questions=" + encodeURIComponent(JSON.stringify(questions));
-        console.log(queryString);
         const response = await fetch("https://qzblapi.azurewebsites.net/api/EditQuestions" + queryString);
         const data = await response.json();
-        console.log(data);
+
+        // If the question was successfully edited, update the local storage with the new question data.
         if (data.questionsEdited && data.questionsEdited > 0) {
             console.log("Successfully edited question!");
 
@@ -135,10 +141,13 @@ export function Edit() {
             console.log("Error: " + data.Error);
             alert("An error occurred when trying to save your edit. No changes have been made.  Try again later.");
         }
+
+        // Redirect the user back to the main page and remove the editQuestion cookie.
         removeCookie("editQuestion");
         window.location.href = "/";
     }
 
+    // Return the JSX for the Edit page.
     return (
         <div className="midbound">
             <h3>Edit Question</h3>

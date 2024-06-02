@@ -1,6 +1,7 @@
 import React from 'react';
 
 export function About() {
+  // Static page about the project.
   return (
     <div className="about-div">
       <h1>About the Quiz Bowl Capstone Project</h1>
